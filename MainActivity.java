@@ -30,7 +30,7 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
         remiButton.setBackgroundResource(R.drawable.remi1);
         animation = (ImageView) findViewById(R.id.animation);
         animation.setBackgroundResource(R.drawable.animation);
-        //remiAccessory_imgView= (ImageView) findViewById(R.id.accessory);
+        //remiAccessory_imgView= (ImageView) findViewById(R.id.accessory);//
         frameAnimation = (AnimationDrawable) animation.getBackground();
         remi = new Remi(0, 0, 0, this);
         remisAccessory = new Accessory(0, 0, 0, this);
