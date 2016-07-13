@@ -1,35 +1,51 @@
 package com.example.miroslav.finalproject;
 
+import android.content.ClipData;
 import android.content.Intent;
 import android.graphics.drawable.AnimationDrawable;
 import android.media.MediaPlayer;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
+import android.view.DragEvent;
+import android.view.MotionEvent;
 import android.view.View;
 import android.widget.FrameLayout;
 import android.widget.ImageButton;
 import android.widget.ImageView;
+import android.widget.LinearLayout;
 
-public class LovePet extends AppCompatActivity implements View.OnClickListener  {
+public class LovePet extends AppCompatActivity implements View.OnClickListener,View.OnTouchListener, View.OnDragListener{
     Remi remi;
+    String remiAcc;
     AnimationDrawable frameAnimation;
     MediaPlayer mp;
-    ImageButton remiButton, backButton,menub1, menub2, menub3, menub4, menub5, menub6, menub7, menub8, menub9;
+    ImageButton remiButton, foodMenu, foodb1, backButton, menub1, menub2, menub3, menub4, menub5, menub6, menub7, menub8, menub9;
     ImageView animation;
     Accessory remisAccessory;
     FrameLayout menuFrame;
+    LinearLayout foodMenuLayout;
     boolean menuOff = true;
+    boolean menuFoodOff = true;
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_love_pet);
         ImageButton menuButton = (ImageButton) findViewById(R.id.menu_button);
-
+        ImageButton foodButton = (ImageButton) findViewById(R.id.menu_food_button);
+        /*
+        Intent iin= getIntent();
+        Bundle b = iin.getExtras();
+        if(b!=null)
+        {   int resID =(int) b.get("accessoryOn");
+            remisAccessory.drawMain(resID);
+        }
+*/
         backButton = (ImageButton) findViewById(R.id.backBtn);
-                remiButton = (ImageButton) findViewById(R.id.img_Remi);
-                remiButton.setBackgroundResource(R.drawable.remi1);
-                animation = (ImageView) findViewById(R.id.animation);
-                animation.setBackgroundResource(R.drawable.animation);
+        remiButton = (ImageButton) findViewById(R.id.img_Remi);
+        remiButton.setBackgroundResource(R.drawable.remi1);
+        animation = (ImageView) findViewById(R.id.animation);
+        animation.setBackgroundResource(R.drawable.animation);
 
         menuButton.setOnClickListener(new View.OnClickListener() {
             public void onClick(View v) {
@@ -42,6 +58,20 @@ public class LovePet extends AppCompatActivity implements View.OnClickListener  
                 }
             }
         });
+
+        foodButton.setOnClickListener(new View.OnClickListener() {
+            public void onClick(View v) {
+                if (menuFoodOff) {
+                    menuFoodOff = false;
+                    menuFoodOnOff(menuFoodOff);
+                } else {
+                    menuOff = true;
+                    menuFoodOnOff(menuFoodOff);
+                }
+            }
+        });
+        foodMenuLayout = (LinearLayout) findViewById(R.id.foodMenu);
+        foodb1 = (ImageButton) findViewById(R.id.foodb1);
         menuFrame = (FrameLayout) findViewById(R.id.frameLayout2);
         menub1 = (ImageButton) findViewById(R.id.menu_button1);
         menub2 = (ImageButton) findViewById(R.id.menu_button2);
@@ -52,20 +82,20 @@ public class LovePet extends AppCompatActivity implements View.OnClickListener  
         menub7 = (ImageButton) findViewById(R.id.menu_button7);
         menub8 = (ImageButton) findViewById(R.id.menu_button8);
         menub9 = (ImageButton) findViewById(R.id.menu_button9);
-                frameAnimation = (AnimationDrawable) animation.getBackground();
-                remi = new Remi(0, 0, 0, this);
-                remisAccessory = new Accessory(0, 0, 0, this);
-                mp = MediaPlayer.create(this, R.raw.woof);
-                remi.draw();
-                remisAccessory.draw();
-                remiButton.setOnClickListener(new View.OnClickListener() {
-                    @Override
-                    public void onClick(View view) {
-                        mp.start();
-                    }
-                });
+        frameAnimation = (AnimationDrawable) animation.getBackground();
+        remi = new Remi(0, 0, 0, this);
+        remisAccessory = new Accessory(0, 0, 0, this);
+        mp = MediaPlayer.create(this, R.raw.woof);
+        remi.draw();
+        remisAccessory.draw();
+        remiButton.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                mp.start();
+            }
+        });
 
-                backButton.setOnClickListener(this);
+        backButton.setOnClickListener(this);
 
 
         menub1.setOnClickListener(this);
@@ -78,20 +108,26 @@ public class LovePet extends AppCompatActivity implements View.OnClickListener  
         menub8.setOnClickListener(this);
         menub9.setOnClickListener(this);
 
-            }
 
-            // Called when Activity becomes visible or invisible to the user
-            @Override
-            public void onWindowFocusChanged(boolean hasFocus) {
-                super.onWindowFocusChanged(hasFocus);
-                if (hasFocus) {
-                    // Starting the animation when in Focus
-                    frameAnimation.start();
-                } else {
-                    // Stoping the animation when not in Focus
-                    frameAnimation.stop();
-                }
-            }
+        foodb1.setOnTouchListener(this);
+        remiButton.setOnDragListener(this);
+
+    }
+
+    // Called when Activity becomes visible or invisible to the user
+    /*
+    @Override
+    public void onWindowFocusChanged(boolean hasFocus) {
+        super.onWindowFocusChanged(hasFocus);
+        if (hasFocus) {
+            // Starting the animation when in Focus
+            frameAnimation.start();
+        } else {
+            // Stoping the animation when not in Focus
+            frameAnimation.stop();
+        }
+    }
+    */
 
     public void menuOnOff(final boolean boolMenuOff) {
         if (boolMenuOff) {
@@ -119,62 +155,237 @@ public class LovePet extends AppCompatActivity implements View.OnClickListener  
         }
     }
 
-            public void onClick(View v) {
-                switch (v.getId()) {
-                    case R.id.backBtn:
-                        //Do something
-                        Intent intent = new Intent(this,MainActivity.class);
-                        startActivity(intent);
-                        break;
-                    case R.id.menu_button1:
-                        remisAccessory.setImage(0);
-                        menuOff = true;
-                        menuOnOff(menuOff);
-                        break;
-                    case R.id.menu_button2:
-                        remisAccessory.setImage(R.drawable.remicollar3);
-                        menuOff = true;
-                        menuOnOff(menuOff);
-                        break;
-                    case R.id.menu_button3:
-                        remisAccessory.setImage(R.drawable.remicollar4);
-                        menuOff = true;
-                        menuOnOff(menuOff);
-                        break;
-                    case R.id.menu_button4:
-                        remisAccessory.setImage(R.drawable.remicollar2);
-                        menuOff = true;
-                        menuOnOff(menuOff);
-                        break;
-                    case R.id.menu_button5:
-                        remisAccessory.setImage(R.drawable.remicollar1);
-                        menuOff = true;
-                        menuOnOff(menuOff);
-                        break;
-                    case R.id.menu_button6:
-                        remisAccessory.setImage(R.drawable.remibandana4);
-                        menuOff = true;
-                        menuOnOff(menuOff);
-                        break;
-                    case R.id.menu_button7:
-                        remisAccessory.setImage(R.drawable.remibandana2);
-                        menuOff = true;
-                        menuOnOff(menuOff);
-                        break;
-                    case R.id.menu_button8:
-                        remisAccessory.setImage(R.drawable.remibandana1);
-                        menuOff = true;
-                        menuOnOff(menuOff);
-                        break;
-                    case R.id.menu_button9:
-                        remisAccessory.setImage(R.drawable.remibandana3);
-                        menuOff = true;
-                        menuOnOff(menuOff);
-                        break;
-
-                    default:
-                        break;
-
-                }
-            }
+    public void menuFoodOnOff(final boolean boolMenuOff) {
+        if (boolMenuOff) {
+            foodMenuLayout.setVisibility(View.GONE);
+            foodb1.setVisibility(View.GONE);
+        } else {
+            foodMenuLayout.setVisibility(View.VISIBLE);
+            foodb1.setVisibility(View.VISIBLE);
         }
+    }
+
+
+    @Override
+    public boolean onDrag(View v, DragEvent event){
+        switch(event.getAction()){
+            case DragEvent.ACTION_DRAG_STARTED:
+                break;
+            case DragEvent.ACTION_DRAG_ENTERED:
+                break;
+            case DragEvent.ACTION_DRAG_EXITED:
+                break;
+            case DragEvent.ACTION_DROP:
+                ImageButton view = (ImageButton) event.getLocalState();
+                if (view.getId()==R.id.foodb1){
+                    frameAnimation.start();
+                }
+
+                break;
+            case DragEvent.ACTION_DRAG_ENDED:
+                break;
+        }
+        return true;
+    }
+    @Override
+    public boolean onTouch(View view, MotionEvent motionEvent) {
+        if (motionEvent.getAction() == motionEvent.ACTION_DOWN) {
+            ClipData data = ClipData.newPlainText("", "");
+            View.DragShadowBuilder shadowBuilder = new View.DragShadowBuilder(view);
+            view.startDrag(data, shadowBuilder, view, 0);
+            return true;
+        } else {
+            return false;
+        }
+    }
+
+
+    public void onClick(View v) {
+        switch (v.getId()) {
+            case R.id.backBtn:
+                //Do something
+                Intent intent = new Intent(this, MainActivity.class).putExtra("accessoryOn", remiAcc);
+                startActivity(intent);
+                break;
+            case R.id.menu_button1:
+                remisAccessory.setImage(0);
+                remiAcc = null;
+                menuOff = true;
+                menuOnOff(menuOff);
+                break;
+            case R.id.menu_button2:
+                remisAccessory.setImage(R.drawable.remicollar3);
+                remiAcc = "remicollar3";
+                menuOff = true;
+                menuOnOff(menuOff);
+                break;
+            case R.id.menu_button3:
+                remisAccessory.setImage(R.drawable.remicollar4);
+                remiAcc = "remicollar4";
+                menuOff = true;
+                menuOnOff(menuOff);
+                break;
+            case R.id.menu_button4:
+                remisAccessory.setImage(R.drawable.remicollar2);
+                remiAcc = "remicollar2";
+                menuOff = true;
+                menuOnOff(menuOff);
+                break;
+            case R.id.menu_button5:
+                remisAccessory.setImage(R.drawable.remicollar1);
+                remiAcc = "remicollar1";
+                menuOff = true;
+                menuOnOff(menuOff);
+                break;
+            case R.id.menu_button6:
+                remisAccessory.setImage(R.drawable.remibandana4);
+                remiAcc = "remibandana4";
+                menuOff = true;
+                menuOnOff(menuOff);
+                break;
+            case R.id.menu_button7:
+                remisAccessory.setImage(R.drawable.remibandana2);
+                remiAcc = "remibandana2";
+                menuOff = true;
+                menuOnOff(menuOff);
+                break;
+            case R.id.menu_button8:
+                remisAccessory.setImage(R.drawable.remibandana1);
+                remiAcc = "remibandana1";
+                menuOff = true;
+                menuOnOff(menuOff);
+                break;
+            case R.id.menu_button9:
+                remisAccessory.setImage(R.drawable.remibandana3);
+                remiAcc = "remibandana3";
+                menuOff = true;
+                menuOnOff(menuOff);
+                break;
+
+            default:
+                break;
+
+        }
+    }
+}
+
+
+////////////////////////////////////////////////////////////////////////////////////
+/*
+
+package com.example.miroslav.draganddrop;
+
+import android.content.ClipData;
+import android.graphics.Color;
+import android.support.v4.view.MotionEventCompat;
+import android.support.v7.app.AppCompatActivity;
+import android.os.Bundle;
+import android.view.DragEvent;
+import android.view.MotionEvent;
+import android.view.View;
+import android.widget.SeekBar;
+import android.widget.TextView;
+
+public class MainActivity extends AppCompatActivity implements View.OnTouchListener, SeekBar.OnSeekBarChangeListener, View.OnDragListener {
+    int valR, valB, valG, newR, newG, newB;
+    TextView textViewR, textViewB, textViewG, textViewFinal;
+    SeekBar seekBarR, seekBarB, seekBarG;
+
+    @Override
+    protected void onCreate(Bundle savedInstanceState) {
+        super.onCreate(savedInstanceState);
+        setContentView(R.layout.activity_main);
+        seekBarR = (SeekBar) findViewById(R.id.redBar);
+        seekBarG = (SeekBar) findViewById(R.id.greenBar);
+        seekBarB = (SeekBar) findViewById(R.id.blueBar);
+        seekBarR.setOnSeekBarChangeListener(this);
+        seekBarG.setOnSeekBarChangeListener(this);
+        seekBarB.setOnSeekBarChangeListener(this);
+        textViewR = (TextView) findViewById(R.id.textViewRed);
+        textViewG = (TextView) findViewById(R.id.textViewGreen);
+        textViewB = (TextView) findViewById(R.id.textViewBlue);
+        textViewFinal = (TextView) findViewById(R.id.textViewResult);
+
+        textViewR.setOnTouchListener(this);
+        textViewG.setOnTouchListener(this);
+        textViewB.setOnTouchListener(this);
+
+        textViewFinal.setOnDragListener(this);
+
+        newR = 0;
+        newG = 0;
+        newB = 0;
+
+    }
+
+    @Override
+    public void onProgressChanged(SeekBar seekbar, int progress, boolean fromUser) {
+        if (seekbar.getId() == R.id.redBar) {
+            valR = seekbar.getProgress();
+            textViewR.setBackgroundColor(Color.rgb(valR, 0, 0));
+            textViewR.setText("R = " + valR);
+        }
+        if (seekbar.getId() == R.id.greenBar) {
+            valG = seekbar.getProgress();
+            textViewG.setBackgroundColor(Color.rgb(0, valG, 0));
+            textViewG.setText("G = " + valG);
+        }
+        if (seekbar.getId() == R.id.blueBar) {
+            valB = seekbar.getProgress();
+            textViewB.setBackgroundColor(Color.rgb(0, 0, valB));
+            textViewB.setText("B = " + valB);
+        }
+    }
+
+
+    @Override
+    public void onStartTrackingTouch(SeekBar seekBar) {
+    }
+
+    @Override
+    public void onStopTrackingTouch(SeekBar seekBar) {
+    }
+
+@Override
+public boolean onDrag(View v, DragEvent event){
+    switch(event.getAction()){
+        case DragEvent.ACTION_DRAG_STARTED:
+            break;
+        case DragEvent.ACTION_DRAG_ENTERED:
+            break;
+        case DragEvent.ACTION_DRAG_EXITED:
+            break;
+        case DragEvent.ACTION_DROP:
+            TextView view = (TextView) event.getLocalState();
+            if (view.getId()==R.id.textViewRed){
+                newR=valR;
+            }
+            if (view.getId()==R.id.textViewGreen){
+                newG=valG;
+            }
+            if (view.getId()==R.id.textViewBlue){
+                newB=valB;
+            }
+            TextView container = (TextView) v;
+            container.setBackgroundColor(Color.rgb(newR, newG, newB));
+            break;
+        case DragEvent.ACTION_DRAG_ENDED:
+            break;
+    }
+    return true;
+}
+    @Override
+    public boolean onTouch(View view, MotionEvent motionEvent) {
+        if (motionEvent.getAction() == motionEvent.ACTION_DOWN) {
+            ClipData data = ClipData.newPlainText("", "");
+            View.DragShadowBuilder shadowBuilder = new View.DragShadowBuilder(view);
+            view.startDrag(data, shadowBuilder, view, 0);
+            return true;
+        } else {
+            return false;
+        }
+    }
+}
+
+ */
+///////////////////////////////////////////////////////////////////////////////

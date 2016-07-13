@@ -19,14 +19,17 @@ public class MyDatabase {
 
     }
 
-    public void insertData( String name,String type,String color, String pattern, byte[] image) throws SQLiteException {
+    public long insertData( String name,String highScore,String highScore2,String coins, String accId) throws SQLiteException {
         SQLiteDatabase db = helper.getWritableDatabase();
         ContentValues cv = new ContentValues();
         cv.put(Constants.USERNAME, name);
-        cv.put(Constants.HIGHSCORE, type);
-        cv.put(Constants.COINS, color);
-        cv.put(Constants.ACCESSORYID, pattern);
+        cv.put(Constants.HIGHSCORE, highScore);
+        cv.put(Constants.HIGHSCORE2, highScore2);
+        cv.put(Constants.COINS, coins);
+        cv.put(Constants.ACCESSORYID, accId);
         db.insert( Constants.DATABASE_NAME, null, cv );
+        long id = db.insert(Constants.TABLE_NAME, null, cv);
+        return id;
 
     }
 

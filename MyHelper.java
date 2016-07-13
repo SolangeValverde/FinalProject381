@@ -13,7 +13,7 @@ public class MyHelper extends SQLiteOpenHelper {
     // Table create statement
     private static final String CREATE_TABLE_IMAGE = "CREATE TABLE " + Constants.DATABASE_NAME
             + "("+ Constants.USERNAME + " TEXT," + Constants.HIGHSCORE + " TEXT," +
-            Constants.COINS + " TEXT,"+ Constants.ACCESSORYID + " TEXT);";
+             Constants.HIGHSCORE2 + " TEXT,"+Constants.COINS + " TEXT,"+ Constants.ACCESSORYID + " TEXT);";
 
     private Context context;
 

@@ -4,9 +4,6 @@ import android.app.Activity;
 import android.widget.ImageButton;
 import android.widget.ImageView;
 
-/**
- * Created by miroslav on 02/07/16.
- */
 
 public class Remi {
     public int xPos, yPos, xVel, yVel;

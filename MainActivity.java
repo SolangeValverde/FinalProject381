@@ -22,6 +22,9 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
 
+        Intent iin= getIntent();
+        Bundle b = iin.getExtras();
+
         loveButton = (ImageButton) findViewById(R.id.loveButton);
         feedButton = (ImageButton) findViewById(R.id.feedButton);
         brushButton = (ImageButton) findViewById(R.id.brushButton);
@@ -44,9 +47,11 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
             }
         });
 
+
         loveButton.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
+                //Intent intent = new Intent(MainActivity.this,LovePet.class).putExtra("accessoryOn", remisAccessory.IDACC);
                 Intent intent = new Intent(MainActivity.this,LovePet.class);
                 startActivity(intent);
             }
@@ -65,6 +70,12 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
                 //Game 2 starts();
             }
         });
+
+        if(b!=null)
+        {   String str =(String) b.get("accessoryOn");
+            int resID = getResources().getIdentifier(str , "drawable", getPackageName());
+            remisAccessory.drawMain(resID);
+        }
 
     }
 

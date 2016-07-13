@@ -8,9 +8,10 @@ import android.widget.ImageView;
  * Created by miroslav on 02/07/16.
  */
 public class Accessory {
-    public int xPos, yPos, xVel, yVel;
+    public int xPos, yPos, xVel, yVel, IDACC;
     public ImageView remi_accessory;
     public Drawable img_remi_accessory;
+
 
     public Activity activity;
 
@@ -27,6 +28,16 @@ public class Accessory {
     }
 
     public void draw() {
+        remi_accessory.setX(xPos);
+        remi_accessory.setY(yPos);
+    }
+    public void remiSendId(int resID){
+        IDACC=resID;
+    }
+
+    public void drawMain(int resID) {
+        remiSendId(resID);
+        remi_accessory.setImageResource(resID);
         remi_accessory.setX(xPos);
         remi_accessory.setY(yPos);
     }
