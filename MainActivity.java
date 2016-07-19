@@ -52,22 +52,41 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
             @Override
             public void onClick(View view) {
                 //Intent intent = new Intent(MainActivity.this,LovePet.class).putExtra("accessoryOn", remisAccessory.IDACC);
-                Intent intent = new Intent(MainActivity.this,LovePet.class);
-                startActivity(intent);
+                Intent oldintent = new Intent();
+                if (oldintent.hasExtra("user")) {//coming from query
+                    String username = oldintent.getStringExtra("user");
+                    Intent intent = new Intent(MainActivity.this, LovePet.class);
+                    intent.putExtra("user", username);
+                    startActivity(intent);
+                }
             }
         });
 
         feedButton.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-                Intent intent = new Intent(MainActivity.this,Game1.class);
-                startActivity(intent);
+
+                Intent oldintent = new Intent();
+                if (oldintent.hasExtra("user")) {//coming from query
+                    String username = oldintent.getStringExtra("user");
+                    Intent intent = new Intent(MainActivity.this,Game1.class);
+                    intent.putExtra("user", username);
+                    startActivity(intent);
+                }
             }
         });
         brushButton.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
                 //Game 2 starts();
+                //Intent oldintent = new Intent();
+//                if (oldintent.hasExtra("user")) {//coming from query
+//                    String username = oldintent.getStringExtra("user");
+//                    Intent intent = new Intent(MainActivity.this,Game2.class);
+//                    intent.putExtra("user", username);
+//                    startActivity(intent);
+//                }
+
             }
         });
 

@@ -30,7 +30,33 @@ public class MyDatabase {
         db.insert( Constants.DATABASE_NAME, null, cv );
         long id = db.insert(Constants.TABLE_NAME, null, cv);
         return id;
+    }
 
+    public boolean updateScore(long rowId,String coins)
+    {
+        ContentValues args = new ContentValues();
+        args.put(Constants.USERNAME, rowId);
+        args.put(Constants.COINS, coins);
+        int i =  db.update(Constants.TABLE_NAME, args, Constants.USERNAME + "=" + rowId, null);
+        return i > 0;
+    }
+
+    public boolean updateAccesory(long rowId,String accesory)
+    {
+        ContentValues args = new ContentValues();
+        args.put(Constants.USERNAME, rowId);
+        args.put(Constants.ACCESSORYID, accesory);
+        int i =  db.update(Constants.TABLE_NAME, args, Constants.USERNAME + "=" + rowId, null);
+        return i > 0;
+    }
+    public boolean updateHighScore(long rowId,String hs1, String hs2)
+    {
+        ContentValues args = new ContentValues();
+        args.put(Constants.USERNAME, rowId);
+        args.put(Constants.HIGHSCORE, hs1);
+        args.put(Constants.HIGHSCORE2, hs2);
+        int i =  db.update(Constants.TABLE_NAME, args, Constants.USERNAME + "=" + rowId, null);
+        return i > 0;
     }
 
     public Cursor getData() {

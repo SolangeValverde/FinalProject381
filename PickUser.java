@@ -111,6 +111,7 @@ public class PickUser extends AppCompatActivity {
 
 
             Intent intent2 = new Intent(this, MainActivity.class);
+            intent2.putExtra("user", username);
             startActivity(intent2);
         } else {
             Toast.makeText(this, "No data found", Toast.LENGTH_LONG).show();

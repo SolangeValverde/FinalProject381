@@ -1,6 +1,7 @@
 package com.example.miroslav.finalproject;
 
 import android.content.ClipData;
+import android.content.ContentValues;
 import android.content.Intent;
 import android.graphics.drawable.AnimationDrawable;
 import android.media.MediaPlayer;
@@ -9,10 +10,13 @@ import android.os.Bundle;
 import android.view.DragEvent;
 import android.view.MotionEvent;
 import android.view.View;
+import android.widget.Button;
 import android.widget.FrameLayout;
 import android.widget.ImageButton;
 import android.widget.ImageView;
 import android.widget.LinearLayout;
+import android.widget.TextView;
+import android.widget.Toast;
 
 public class LovePet extends AppCompatActivity implements View.OnClickListener,View.OnTouchListener, View.OnDragListener{
     Remi remi;
@@ -26,6 +30,7 @@ public class LovePet extends AppCompatActivity implements View.OnClickListener,V
     LinearLayout foodMenuLayout;
     boolean menuOff = true;
     boolean menuFoodOff = true;
+    MyDatabase db;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -33,6 +38,7 @@ public class LovePet extends AppCompatActivity implements View.OnClickListener,V
         setContentView(R.layout.activity_love_pet);
         ImageButton menuButton = (ImageButton) findViewById(R.id.menu_button);
         ImageButton foodButton = (ImageButton) findViewById(R.id.menu_food_button);
+        db = new MyDatabase(this);
         /*
         Intent iin= getIntent();
         Bundle b = iin.getExtras();
@@ -41,6 +47,7 @@ public class LovePet extends AppCompatActivity implements View.OnClickListener,V
             remisAccessory.drawMain(resID);
         }
 */
+
         backButton = (ImageButton) findViewById(R.id.backBtn);
         remiButton = (ImageButton) findViewById(R.id.img_Remi);
         remiButton.setBackgroundResource(R.drawable.remi1);
@@ -179,6 +186,26 @@ public class LovePet extends AppCompatActivity implements View.OnClickListener,V
                 ImageButton view = (ImageButton) event.getLocalState();
                 if (view.getId()==R.id.foodb1){
                     frameAnimation.start();
+
+                    try{
+                        String coins = ((Button)findViewById(R.id.scoreButton)).getText().toString().trim();
+                        //db.open();
+                        //replace row id with user name that we get from create User
+                        Intent oldintent = new Intent();
+                        if (oldintent.hasExtra("user")) {//coming from query
+                            String username = oldintent.getStringExtra("user");
+                            long un = Long.valueOf(username).longValue();
+                            db.updateScore(un, coins);
+                        }
+                        Toast.makeText(this, "Modified Successfully", Toast.LENGTH_SHORT).show();
+                       // db.close();
+                        finish();
+
+                }catch (Exception e) {
+                        Toast.makeText(this, "error", Toast.LENGTH_SHORT).show();
+                e.printStackTrace();
+            }
+           // db.close();
                 }
 
                 break;
@@ -187,6 +214,8 @@ public class LovePet extends AppCompatActivity implements View.OnClickListener,V
         }
         return true;
     }
+
+
     @Override
     public boolean onTouch(View view, MotionEvent motionEvent) {
         if (motionEvent.getAction() == motionEvent.ACTION_DOWN) {
