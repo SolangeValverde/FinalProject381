@@ -125,14 +125,69 @@ public class MyHelper extends SQLiteOpenHelper {
         }
         return remiAccesory;
     }
-    public boolean updateHighScore(String rowId,String hs1, String hs2)
+
+    public boolean updateHighScoreG1(String rowId,String newHighScore, String oldHighScore)
     {
         ContentValues args = new ContentValues();
-        args.put(Constants.USERNAME, rowId);
-        args.put(Constants.HIGHSCORE, hs1);
-        args.put(Constants.HIGHSCORE2, hs2);
-        int i =  db.update(Constants.TABLE_NAME, args, Constants.USERNAME + "=" + rowId, null);
+        args.put(Constants.HIGHSCORE, newHighScore);
+        String where = Constants.HIGHSCORE + " = ?";
+        String[] whereArgs = {oldHighScore};
+        int i =  db.update(Constants.TABLE_NAME, args, where, whereArgs);
         return i > 0;
+    }
+
+    public boolean updateHighScoreG2(String rowId,String newHighScore, String oldHighScore)
+    {
+        ContentValues args = new ContentValues();
+        args.put(Constants.HIGHSCORE2, newHighScore);
+        String where = Constants.HIGHSCORE2 + " = ?";
+        String[] whereArgs = {oldHighScore};
+        int i =  db.update(Constants.TABLE_NAME, args, where, whereArgs);
+        return i > 0;
+    }
+
+    public String getHighScoreG1(String rowId)
+    {
+        db = getReadableDatabase();
+        String query = "SELECT * FROM "+Constants.TABLE_NAME+" WHERE "+Constants.USERNAME+" = '" + rowId+ "' ";
+
+        Cursor c1 =db.rawQuery(query, null);
+
+        String highscore1 = "0";
+        int colAcc = c1.getColumnIndex(Constants.HIGHSCORE);
+        Log.d("\n sol \n", Integer.toString(colAcc));
+        if (c1!= null) {
+            if (c1.moveToFirst() && colAcc ==1) {
+                highscore1 = c1.getString(colAcc);
+            }
+            return highscore1;
+        }else {
+
+            Log.d( "\n sol \n", "el cursor es nulo");
+        }
+        return highscore1;
+    }
+
+    public String getHighScoreG2(String rowId)
+    {
+        db = getReadableDatabase();
+        String query = "SELECT * FROM "+Constants.TABLE_NAME+" WHERE "+Constants.USERNAME+" = '" + rowId+ "' ";
+
+        Cursor c1 =db.rawQuery(query, null);
+
+        String highscore2 = "0";
+        int colAcc = c1.getColumnIndex(Constants.HIGHSCORE2);
+        Log.d("\n sol \n", Integer.toString(colAcc));
+        if (c1!= null) {
+            if (c1.moveToFirst() && colAcc ==2) {
+                highscore2 = c1.getString(colAcc);
+            }
+            return highscore2;
+        }else {
+
+            Log.d( "\n sol \n", "el cursor es nulo");
+        }
+        return highscore2;
     }
 
     public Cursor getData() {
