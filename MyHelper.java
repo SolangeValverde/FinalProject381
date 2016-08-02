@@ -58,15 +58,37 @@ public class MyHelper extends SQLiteOpenHelper {
         }
     }
 
-    public boolean updateScore(String rowId,String coins)
+    public boolean updateCoins(String rowId,String newCoins, String oldCoins)
     {
         ContentValues args = new ContentValues();
-        args.put(Constants.USERNAME, rowId);
-        args.put(Constants.COINS, coins);
-        int i =  db.update(Constants.TABLE_NAME, args, Constants.USERNAME + "=" + rowId, null);
+        args.put(Constants.COINS, newCoins);
+        String where = Constants.COINS + " = ?";
+        String[] whereArgs = {oldCoins};
+        int i =  db.update(Constants.TABLE_NAME, args, where, whereArgs);
         return i > 0;
     }
 
+    public String getCoins(String rowId)
+    {
+        db = getReadableDatabase();
+        String query = "SELECT * FROM "+Constants.TABLE_NAME+" WHERE "+Constants.USERNAME+" = '" + rowId+ "' ";
+
+        Cursor c1 =db.rawQuery(query, null);
+
+        String coins = "100";
+        int colAcc = c1.getColumnIndex(Constants.COINS);
+        Log.d("\n sol \n", Integer.toString(colAcc));
+        if (c1!= null) {
+            if (c1.moveToFirst() && colAcc ==3) {
+                coins = c1.getString(colAcc);
+                }
+            return coins;
+        }else {
+
+            Log.d( "\n sol \n", "el cursor es nulo");
+        }
+        return coins;
+    }
     public boolean updateAccesory(String rowId,String accesory)
     {
         ContentValues args = new ContentValues();

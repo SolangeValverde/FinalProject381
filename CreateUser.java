@@ -39,9 +39,9 @@ public class CreateUser extends AppCompatActivity {
     public void addUserInfo(View view){
         String name =usernameEditText.getText().toString();
         String password = passwordEditText.getText().toString();
-        String highScore1 = "";
-        String highScore2 = "";
-        String coins = "";
+        String highScore1 = "0";
+        String highScore2 = "0";
+        String coins = "100";
         String accId = "";
         long id = myDB.insertData(name, highScore1, highScore2, coins, accId);
        // Cursor cur = db.helper.testConnection(db);

@@ -8,6 +8,7 @@ import android.graphics.drawable.AnimationDrawable;
 import android.media.MediaPlayer;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
+import android.util.Log;
 import android.view.DragEvent;
 import android.view.MotionEvent;
 import android.view.View;
@@ -26,6 +27,7 @@ public class LovePet extends AppCompatActivity implements View.OnClickListener,V
     MediaPlayer mp;
     ImageButton remiButton, foodMenu, foodb1, backButton, menub1, menub2, menub3, menub4, menub5, menub6, menub7, menub8, menub9;
     ImageView animation;
+    Button money;
     Accessory remisAccessory;
     FrameLayout menuFrame;
     LinearLayout foodMenuLayout;
@@ -54,8 +56,14 @@ public class LovePet extends AppCompatActivity implements View.OnClickListener,V
         remiButton.setBackgroundResource(R.drawable.remi1);
         animation = (ImageView) findViewById(R.id.animation);
         animation.setBackgroundResource(R.drawable.animation);
+        money = (Button) findViewById(R.id.coins);
 
-        menuButton.setOnClickListener(new View.OnClickListener() {
+
+
+
+
+
+            menuButton.setOnClickListener(new View.OnClickListener() {
             public void onClick(View v) {
                 if (menuOff) {
                     menuOff = false;
@@ -120,9 +128,14 @@ public class LovePet extends AppCompatActivity implements View.OnClickListener,V
         foodb1.setOnTouchListener(this);
         remiButton.setOnDragListener(this);
 
+//        Intent iin= getIntent();
+//        Bundle b = iin.getExtras();
         Intent iin= getIntent();
         Bundle b = iin.getExtras();
-
+//        if(b!=null) {
+//            String username = (String) b.get("user");
+//
+//        }
         if (b!=null){
             String username = (String) b.get("user");
             if (dbHelper.getAccesory(username)!= "" ||dbHelper.getAccesory(username)!= null) {
@@ -131,24 +144,14 @@ public class LovePet extends AppCompatActivity implements View.OnClickListener,V
                 int resID = getResources().getIdentifier(acc , "drawable", getPackageName());
                 remisAccessory.setImage(resID);
             }
+
+            if (dbHelper.getCoins(username)!= "" ||dbHelper.getCoins(username)!= null) {
+                money.setText(dbHelper.getCoins(username));
+                Log.d("SOL\n" ,dbHelper.getCoins(username));
+            }
         }
 
     }
-
-    // Called when Activity becomes visible or invisible to the user
-    /*
-    @Override
-    public void onWindowFocusChanged(boolean hasFocus) {
-        super.onWindowFocusChanged(hasFocus);
-        if (hasFocus) {
-            // Starting the animation when in Focus
-            frameAnimation.start();
-        } else {
-            // Stoping the animation when not in Focus
-            frameAnimation.stop();
-        }
-    }
-    */
 
     public void menuOnOff(final boolean boolMenuOff) {
         if (boolMenuOff) {
@@ -199,32 +202,30 @@ public class LovePet extends AppCompatActivity implements View.OnClickListener,V
             case DragEvent.ACTION_DROP:
                 ImageButton view = (ImageButton) event.getLocalState();
                 if (view.getId()==R.id.foodb1){
-                    frameAnimation.stop();
-                    frameAnimation.start();
 
                     try{
-                        String coins = ((Button)findViewById(R.id.scoreButton)).getText().toString().trim();
-                        //db.open();
-                        //replace row id with user name that we get from create User
-                        Intent oldintent = new Intent();
-                        if (oldintent.hasExtra("user")) {//coming from query
-                            String username = oldintent.getStringExtra("user");
-                            //long un = Long.valueOf(username).longValue();
-                            dbHelper.updateScore(username, coins);
+                        String coins = money.getText().toString();
+                        int newCoinAmt = Integer.parseInt(coins) - 10;
+                        Intent iin= getIntent();
+                        Bundle b = iin.getExtras();
+                        if(b!= null){
+                            String username = (String) b.get("user");;
+                            dbHelper.updateCoins(username,Integer.toString(newCoinAmt), coins);
+                            money.setText(Integer.toString(newCoinAmt));
                         }
-                        Toast.makeText(this, "Modified Successfully", Toast.LENGTH_SHORT).show();
-                       // db.close();
-                        finish();
+                        //Toast.makeText(this, "Modified Successfully", Toast.LENGTH_SHORT).show();
 
-                }catch (Exception e) {
+                        //finish();
+                    }catch (Exception e) {
                         Toast.makeText(this, "error", Toast.LENGTH_SHORT).show();
-                e.printStackTrace();
-            }
-           // db.close();
+                        e.printStackTrace();
+                    }
                 }
 
                 break;
             case DragEvent.ACTION_DRAG_ENDED:
+                frameAnimation.stop();
+                frameAnimation.start();
                 break;
         }
         return true;
@@ -245,10 +246,8 @@ public class LovePet extends AppCompatActivity implements View.OnClickListener,V
 
     public void caseButtonsAction(Intent iin){
         Bundle b = iin.getExtras();
-       // if (oldintent.hasExtra("user")) {//coming from query
         if(b!= null){
             String username = (String) b.get("user");
-            //long un = Long.valueOf(username).longValue();
             dbHelper.updateAccesory(username, remiAcc);
         }
         menuOff = true;
@@ -262,12 +261,9 @@ public class LovePet extends AppCompatActivity implements View.OnClickListener,V
         switch (v.getId()) {
 
             case R.id.backBtn:
-//                Intent iin= getIntent();
-                Bundle b = iin.getExtras();
-                if(b!=null) {
-                    String username = (String) b.get("user");
-
-
+                Bundle bu = iin.getExtras();
+                if(bu!=null) {
+                    String username = (String) bu.get("user");
                     Intent intent = new Intent(this, MainActivity.class).putExtra("user", username);
                     startActivity(intent);
                 }

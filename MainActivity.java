@@ -101,11 +101,7 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
             }
         });
 
-//        if(b!=null)
-//        {   //String str =(String) b.get("accessoryOn");
-//            int resID = getResources().getIdentifier(str , "drawable", getPackageName());
-//            //remisAccessory.drawMain(resID);
-//        }
+
 
         if (b!=null){
             String username = (String) b.get("user");
@@ -114,7 +110,6 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
 
                 int resID = getResources().getIdentifier(acc , "drawable", getPackageName());
                 remisAccessory.drawMain(resID);
-                //remisAccessory.setImage(Integer.parseInt(acc));
             }
         }
     }
