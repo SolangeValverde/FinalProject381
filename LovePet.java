@@ -47,13 +47,7 @@ public class LovePet extends AppCompatActivity implements View.OnClickListener,V
          dbHelper = new MyHelper(this);
         myDB = dbHelper.getWritableDatabase();
 
-        Intent iin= getIntent();
-        Bundle b = iin.getExtras();
-      /*  if(b!=null)
-        {   int resID =(int) b.get("accessoryOn");
-            remisAccessory.drawMain(resID);
-        }
-*/
+
 
         backButton = (ImageButton) findViewById(R.id.backBtn);
         remiButton = (ImageButton) findViewById(R.id.img_Remi);
@@ -125,6 +119,19 @@ public class LovePet extends AppCompatActivity implements View.OnClickListener,V
 
         foodb1.setOnTouchListener(this);
         remiButton.setOnDragListener(this);
+
+        Intent iin= getIntent();
+        Bundle b = iin.getExtras();
+
+        if (b!=null){
+            String username = (String) b.get("user");
+            if (dbHelper.getAccesory(username)!= "" ||dbHelper.getAccesory(username)!= null) {
+                String acc = dbHelper.getAccesory(username);
+
+                int resID = getResources().getIdentifier(acc , "drawable", getPackageName());
+                remisAccessory.setImage(resID);
+            }
+        }
 
     }
 
@@ -267,56 +274,49 @@ public class LovePet extends AppCompatActivity implements View.OnClickListener,V
                 break;
             case R.id.menu_button1:
                 remisAccessory.setImage(0);
-                remiAcc = null;
+                remiAcc = "0";
                 menuOff = true;
                 menuOnOff(menuOff);
+                caseButtonsAction(iin);
                 break;
-            case R.id.menu_button2:caseButtonsAction(iin);
+            case R.id.menu_button2:
                 remisAccessory.setImage(R.drawable.remicollar3);
                 remiAcc = "remicollar3";
-                //caseButtonsAction(oldintent);caseButtonsAction(iin);
                 caseButtonsAction(iin);
                 break;
             case R.id.menu_button3:
                 remisAccessory.setImage(R.drawable.remicollar4);
                 remiAcc = "remicollar4";
-                //caseButtonsAction(oldintent);
                 caseButtonsAction(iin);
                 break;
             case R.id.menu_button4:
                 remisAccessory.setImage(R.drawable.remicollar2);
                 remiAcc = "remicollar2";
-               // caseButtonsAction(oldintent);
                 caseButtonsAction(iin);
                 break;
             case R.id.menu_button5:
                 remisAccessory.setImage(R.drawable.remicollar1);
                 remiAcc = "remicollar1";
-               // caseButtonsAction(oldintent);
                 caseButtonsAction(iin);
                 break;
             case R.id.menu_button6:
                 remisAccessory.setImage(R.drawable.remibandana4);
                 remiAcc = "remibandana4";
-                //caseButtonsAction(oldintent);;
                 caseButtonsAction(iin);
                 break;
             case R.id.menu_button7:
                 remisAccessory.setImage(R.drawable.remibandana2);
                 remiAcc = "remibandana2";
-                //caseButtonsAction(oldintent);
                 caseButtonsAction(iin);
                 break;
             case R.id.menu_button8:
                 remisAccessory.setImage(R.drawable.remibandana1);
                 remiAcc = "remibandana1";
-                //caseButtonsAction(oldintent);
                 caseButtonsAction(iin);
                 break;
             case R.id.menu_button9:
                 remisAccessory.setImage(R.drawable.remibandana3);
                 remiAcc = "remibandana3";
-                //caseButtonsAction(oldintent);
                 caseButtonsAction(iin);
                 break;
 
