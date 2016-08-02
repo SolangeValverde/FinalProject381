@@ -35,7 +35,7 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
 
         Intent iin= getIntent();
         in = iin;
-        //Bundle b = iin.getExtras();
+        Bundle b = iin.getExtras();
 
         username = iin.getStringExtra("user");
 
@@ -107,16 +107,16 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
 //            //remisAccessory.drawMain(resID);
 //        }
 
-        if (in.hasExtra("user")){
-            String username = in.getStringExtra("user");
-            //long usn = Long.valueOf(username).longValue();
+        if (b!=null){
+            String username = (String) b.get("user");
             if (dbHelper.getAccesory(username)!= null) {
                 String acc = dbHelper.getAccesory(username);
-                remisAccessory.setImage(Integer.parseInt(acc));
+
+                int resID = getResources().getIdentifier(acc , "drawable", getPackageName());
+                remisAccessory.drawMain(resID);
+                //remisAccessory.setImage(Integer.parseInt(acc));
             }
-
         }
-
     }
 
     // Called when Activity becomes visible or invisible to the user

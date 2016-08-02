@@ -70,9 +70,11 @@ public class MyHelper extends SQLiteOpenHelper {
     public boolean updateAccesory(String rowId,String accesory)
     {
         ContentValues args = new ContentValues();
-        //args.put(Constants.USERNAME, rowId);
         args.put(Constants.ACCESSORYID, accesory);
-        int i =  db.update(Constants.TABLE_NAME, args, Constants.USERNAME + "=" + rowId, null);
+        //String where = Constants.USERNAME + " = " + rowId;
+        String where = Constants.ACCESSORYID + " = ?";
+        String[] whereArgs = {getAccesory(rowId)};
+        int i =  db.update(Constants.TABLE_NAME, args, where, whereArgs);
         return i > 0;
     }
 
@@ -90,7 +92,10 @@ public class MyHelper extends SQLiteOpenHelper {
         Log.d("\n sol \n", Integer.toString(colAcc));
         if (c1!= null && colAcc == 4) {
             //remiAccesory = c1.getString(c1.getColumnIndex(Constants.ACCESSORYID));
-            remiAccesory = c1.getString(colAcc);
+            if (c1.moveToFirst()) {
+
+                remiAccesory = c1.getString(colAcc);
+            }
             return remiAccesory;
         }else {
 

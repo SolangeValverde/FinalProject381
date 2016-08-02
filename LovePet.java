@@ -46,10 +46,10 @@ public class LovePet extends AppCompatActivity implements View.OnClickListener,V
 
          dbHelper = new MyHelper(this);
         myDB = dbHelper.getWritableDatabase();
-        /*
+
         Intent iin= getIntent();
         Bundle b = iin.getExtras();
-        if(b!=null)
+      /*  if(b!=null)
         {   int resID =(int) b.get("accessoryOn");
             remisAccessory.drawMain(resID);
         }
@@ -236,9 +236,11 @@ public class LovePet extends AppCompatActivity implements View.OnClickListener,V
         }
     }
 
-    public void caseButtonsAction(Intent oldintent){
-        if (oldintent.hasExtra("user")) {//coming from query
-            String username = oldintent.getStringExtra("user");
+    public void caseButtonsAction(Intent iin){
+        Bundle b = iin.getExtras();
+       // if (oldintent.hasExtra("user")) {//coming from query
+        if(b!= null){
+            String username = (String) b.get("user");
             //long un = Long.valueOf(username).longValue();
             dbHelper.updateAccesory(username, remiAcc);
         }
@@ -248,13 +250,20 @@ public class LovePet extends AppCompatActivity implements View.OnClickListener,V
     }
 
     public void onClick(View v) {
-        Intent oldintent = new Intent();
+        Intent iin= getIntent();
+
         switch (v.getId()) {
 
             case R.id.backBtn:
-                //Do something
-                Intent intent = new Intent(this, MainActivity.class).putExtra("accessoryOn", remiAcc);
-                startActivity(intent);
+//                Intent iin= getIntent();
+                Bundle b = iin.getExtras();
+                if(b!=null) {
+                    String username = (String) b.get("user");
+
+
+                    Intent intent = new Intent(this, MainActivity.class).putExtra("user", username);
+                    startActivity(intent);
+                }
                 break;
             case R.id.menu_button1:
                 remisAccessory.setImage(0);
@@ -262,45 +271,53 @@ public class LovePet extends AppCompatActivity implements View.OnClickListener,V
                 menuOff = true;
                 menuOnOff(menuOff);
                 break;
-            case R.id.menu_button2:
+            case R.id.menu_button2:caseButtonsAction(iin);
                 remisAccessory.setImage(R.drawable.remicollar3);
                 remiAcc = "remicollar3";
-                caseButtonsAction(oldintent);
+                //caseButtonsAction(oldintent);caseButtonsAction(iin);
+                caseButtonsAction(iin);
                 break;
             case R.id.menu_button3:
                 remisAccessory.setImage(R.drawable.remicollar4);
                 remiAcc = "remicollar4";
-                caseButtonsAction(oldintent);
+                //caseButtonsAction(oldintent);
+                caseButtonsAction(iin);
                 break;
             case R.id.menu_button4:
                 remisAccessory.setImage(R.drawable.remicollar2);
                 remiAcc = "remicollar2";
-                caseButtonsAction(oldintent);
+               // caseButtonsAction(oldintent);
+                caseButtonsAction(iin);
                 break;
             case R.id.menu_button5:
                 remisAccessory.setImage(R.drawable.remicollar1);
                 remiAcc = "remicollar1";
-                caseButtonsAction(oldintent);
+               // caseButtonsAction(oldintent);
+                caseButtonsAction(iin);
                 break;
             case R.id.menu_button6:
                 remisAccessory.setImage(R.drawable.remibandana4);
                 remiAcc = "remibandana4";
-                caseButtonsAction(oldintent);;
+                //caseButtonsAction(oldintent);;
+                caseButtonsAction(iin);
                 break;
             case R.id.menu_button7:
                 remisAccessory.setImage(R.drawable.remibandana2);
                 remiAcc = "remibandana2";
-                caseButtonsAction(oldintent);
+                //caseButtonsAction(oldintent);
+                caseButtonsAction(iin);
                 break;
             case R.id.menu_button8:
                 remisAccessory.setImage(R.drawable.remibandana1);
                 remiAcc = "remibandana1";
-                caseButtonsAction(oldintent);
+                //caseButtonsAction(oldintent);
+                caseButtonsAction(iin);
                 break;
             case R.id.menu_button9:
                 remisAccessory.setImage(R.drawable.remibandana3);
                 remiAcc = "remibandana3";
-                caseButtonsAction(oldintent);
+                //caseButtonsAction(oldintent);
+                caseButtonsAction(iin);
                 break;
 
             default:
@@ -323,7 +340,7 @@ import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
 import android.view.DragEvent;
 import android.view.MotionEvent;
-import android.view.View;
+import android.view.View;caseButtonsAction(iin);
 import android.widget.SeekBar;
 import android.widget.TextView;
 
