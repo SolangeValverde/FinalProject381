@@ -1,5 +1,6 @@
 package com.example.miroslav.finalproject;
 
+import android.database.Cursor;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
 import android.content.Context;
@@ -12,7 +13,7 @@ import android.widget.Toast;
 public class CreateUser extends AppCompatActivity {
     EditText usernameEditText, passwordEditText;
     public static final String DEFAULT = "not available";
-    MyDatabase db;
+    public MyDatabase myDB;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -21,7 +22,7 @@ public class CreateUser extends AppCompatActivity {
         usernameEditText = (EditText)findViewById(R.id.editTextUsername);
         passwordEditText = (EditText)findViewById(R.id.editTextPassword);
         //check if any default thing left
-        db = new MyDatabase(this);
+       myDB = new MyDatabase(this);
 
         SharedPreferences sharedPreferences = getSharedPreferences("MyData", Context.MODE_PRIVATE);
         String username = sharedPreferences.getString("username", DEFAULT);
@@ -42,7 +43,8 @@ public class CreateUser extends AppCompatActivity {
         String highScore2 = "";
         String coins = "";
         String accId = "";
-        long id = db.insertData(name, highScore1, highScore2, coins, accId);
+        long id = myDB.insertData(name, highScore1, highScore2, coins, accId);
+       // Cursor cur = db.helper.testConnection(db);
         if (id < 0)
         {
             Toast.makeText(this, "fail", Toast.LENGTH_SHORT).show();

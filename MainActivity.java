@@ -1,6 +1,7 @@
 package com.example.miroslav.finalproject;
 
 import android.content.Intent;
+import android.database.sqlite.SQLiteDatabase;
 import android.graphics.drawable.AnimationDrawable;
 import android.media.MediaPlayer;
 import android.support.v7.app.AppCompatActivity;
@@ -17,13 +18,21 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
     ImageView animation;
     Accessory remisAccessory;
     Intent in;
-    MyDatabase db;
+    MyDatabase myDBclass;
+    SQLiteDatabase myDB;
+    CreateUser createU;
+    PickUser pickU;
+
     String username;
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
-        db = new MyDatabase(this);
+        myDBclass = new MyDatabase(this);
+
+        MyHelper dbHelper = new MyHelper(this);
+        myDB = dbHelper.getWritableDatabase();
+
         Intent iin= getIntent();
         in = iin;
         //Bundle b = iin.getExtras();
@@ -101,8 +110,8 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
         if (in.hasExtra("user")){
             String username = in.getStringExtra("user");
             //long usn = Long.valueOf(username).longValue();
-            if (db.getAccesory(username)!= null) {
-                String acc = db.getAccesory(username);
+            if (dbHelper.getAccesory(username)!= null) {
+                String acc = dbHelper.getAccesory(username);
                 remisAccessory.setImage(Integer.parseInt(acc));
             }
 

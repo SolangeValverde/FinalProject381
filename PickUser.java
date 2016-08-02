@@ -4,6 +4,7 @@ import android.content.Context;
 import android.content.Intent;
 import android.content.SharedPreferences;
 import android.database.Cursor;
+import android.database.sqlite.SQLiteDatabase;
 import android.graphics.Color;
 import android.os.Bundle;
 import android.support.v7.app.AppCompatActivity;
@@ -22,13 +23,21 @@ public class PickUser extends AppCompatActivity {
     public static Button logon;
     public static final String DEFAULT = "not available";
     public String u, p;
-    MyDatabase db;
+    MyDatabase myDBclass;
+    //CreateUser createU;
+    SQLiteDatabase myDB;
+    MyHelper dbHelper;
     SimpleCursorAdapter myAdapter;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_pick_user);
+        //myDB = createU.myDB;
+        //MyHelper dbHelper = new MyHelper(this,Constants.DATABASE_NAME, null, Constants.DATABASE_VERSION);
+        dbHelper = new MyHelper(this);
+        myDB = dbHelper.getWritableDatabase();
+
         usernameEditView = (EditText) findViewById(R.id.retrUsername);
         passwordEditView = (EditText) findViewById(R.id.retrPassword);
         logon = (Button) findViewById(R.id.retrButton);
@@ -75,7 +84,7 @@ public class PickUser extends AppCompatActivity {
     }
 
     public void retrieve(View view) {
-        db = new MyDatabase(this);
+        //db = new MyDatabase(this);
         SharedPreferences sharedPrefs = getSharedPreferences("MyData", Context.MODE_PRIVATE);
         String username = sharedPrefs.getString("username", DEFAULT);
         String password = sharedPrefs.getString("password", DEFAULT);
@@ -93,7 +102,7 @@ public class PickUser extends AppCompatActivity {
                 if (intent.hasExtra("query")){//coming from query
                     String queryResult = intent.getStringExtra("query");*/
                     Toast.makeText(this, "pre loop", Toast.LENGTH_SHORT).show();
-                    c = db.getData();
+                    c = dbHelper.getData();
                     String id[] = new String[c.getCount()];
                     int i = 0;
                     if (c.getCount() > 0) {

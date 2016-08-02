@@ -10,9 +10,9 @@ import android.util.Log;
 
 
 public class MyDatabase {
-    private SQLiteDatabase db;
+    SQLiteDatabase db;
     private Context context;
-    private final MyHelper helper;
+     final MyHelper helper;
 
     public MyDatabase (Context c){
         context = c;
@@ -21,69 +21,20 @@ public class MyDatabase {
     }
 
     public long insertData( String name,String highScore,String highScore2,String coins, String accId) throws SQLiteException {
-        SQLiteDatabase db = helper.getWritableDatabase();
+        //SQLiteDatabase
+        db = helper.getWritableDatabase();
         ContentValues cv = new ContentValues();
         cv.put(Constants.USERNAME, name);
         cv.put(Constants.HIGHSCORE, highScore);
         cv.put(Constants.HIGHSCORE2, highScore2);
         cv.put(Constants.COINS, coins);
         cv.put(Constants.ACCESSORYID, accId);
-        db.insert( Constants.DATABASE_NAME, null, cv );
+        db.insert( Constants.TABLE_NAME, null, cv );
         long id = db.insert(Constants.TABLE_NAME, null, cv);
         return id;
     }
 
-    public boolean updateScore(String rowId,String coins)
-    {
-        ContentValues args = new ContentValues();
-        args.put(Constants.USERNAME, rowId);
-        args.put(Constants.COINS, coins);
-        int i =  db.update(Constants.TABLE_NAME, args, Constants.USERNAME + "=" + rowId, null);
-        return i > 0;
-    }
 
-    public boolean updateAccesory(String rowId,String accesory)
-    {
-        ContentValues args = new ContentValues();
-        args.put(Constants.USERNAME, rowId);
-        args.put(Constants.ACCESSORYID, accesory);
-        int i =  db.update(Constants.TABLE_NAME, args, Constants.USERNAME + "=" + rowId, null);
-        return i > 0;
-    }
-
-    public String getAccesory(String rowId)
-    {
-        SQLiteDatabase db = helper.getReadableDatabase();
-
-        //Cursor cursor = db.rawQuery("Select * FROM " + Constants.TABLE_NAME, null);
-        String query = "SELECT * FROM "+Constants.TABLE_NAME+" WHERE "+Constants.USERNAME+" = '" + rowId+ "' ";
-        Log.d("-", query);
-        Cursor c1 =db.rawQuery(query, null);
-
-        //String remiAccesory = cursor.getString(4);
-        String remiAccesory;
-        //if (c1.getCount() >4){
-            remiAccesory = c1.getString(c1.getColumnIndex(Constants.ACCESSORYID));
-            return remiAccesory;
-    }
-    public boolean updateHighScore(String rowId,String hs1, String hs2)
-    {
-        ContentValues args = new ContentValues();
-        args.put(Constants.USERNAME, rowId);
-        args.put(Constants.HIGHSCORE, hs1);
-        args.put(Constants.HIGHSCORE2, hs2);
-        int i =  db.update(Constants.TABLE_NAME, args, Constants.USERNAME + "=" + rowId, null);
-        return i > 0;
-    }
-
-    public Cursor getData() {
-        SQLiteDatabase db = helper.getReadableDatabase();
-
-
-        Cursor cursor = db.rawQuery("Select * FROM " + Constants.TABLE_NAME, null);
-        // db.rawQuery("SELECT * FROM permissions_table WHERE name = 'Comics' ", null);
-        return cursor;
-    }
 
 
     public Cursor getDataQuery(String query)

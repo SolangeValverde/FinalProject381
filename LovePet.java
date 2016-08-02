@@ -3,6 +3,7 @@ package com.example.miroslav.finalproject;
 import android.content.ClipData;
 import android.content.ContentValues;
 import android.content.Intent;
+import android.database.sqlite.SQLiteDatabase;
 import android.graphics.drawable.AnimationDrawable;
 import android.media.MediaPlayer;
 import android.support.v7.app.AppCompatActivity;
@@ -30,7 +31,10 @@ public class LovePet extends AppCompatActivity implements View.OnClickListener,V
     LinearLayout foodMenuLayout;
     boolean menuOff = true;
     boolean menuFoodOff = true;
-    MyDatabase db;
+    MyDatabase myDBclass;
+    SQLiteDatabase myDB;
+    MyHelper dbHelper;
+   // CreateUser createU;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -38,7 +42,10 @@ public class LovePet extends AppCompatActivity implements View.OnClickListener,V
         setContentView(R.layout.activity_love_pet);
         ImageButton menuButton = (ImageButton) findViewById(R.id.menu_button);
         ImageButton foodButton = (ImageButton) findViewById(R.id.menu_food_button);
-        db = new MyDatabase(this);
+        myDBclass = new MyDatabase(this);
+
+         dbHelper = new MyHelper(this);
+        myDB = dbHelper.getWritableDatabase();
         /*
         Intent iin= getIntent();
         Bundle b = iin.getExtras();
@@ -196,7 +203,7 @@ public class LovePet extends AppCompatActivity implements View.OnClickListener,V
                         if (oldintent.hasExtra("user")) {//coming from query
                             String username = oldintent.getStringExtra("user");
                             //long un = Long.valueOf(username).longValue();
-                            db.updateScore(username, coins);
+                            dbHelper.updateScore(username, coins);
                         }
                         Toast.makeText(this, "Modified Successfully", Toast.LENGTH_SHORT).show();
                        // db.close();
@@ -233,7 +240,7 @@ public class LovePet extends AppCompatActivity implements View.OnClickListener,V
         if (oldintent.hasExtra("user")) {//coming from query
             String username = oldintent.getStringExtra("user");
             //long un = Long.valueOf(username).longValue();
-            db.updateAccesory(username, remiAcc);
+            dbHelper.updateAccesory(username, remiAcc);
         }
         menuOff = true;
         menuOnOff(menuOff);
