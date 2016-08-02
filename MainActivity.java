@@ -16,19 +16,23 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
     ImageButton loveButton, remiButton,feedButton, brushButton;
     ImageView animation;
     Accessory remisAccessory;
-
+    Intent in;
+    MyDatabase db;
+    String username;
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
-
+        db = new MyDatabase(this);
         Intent iin= getIntent();
-        Bundle b = iin.getExtras();
+        in = iin;
+        //Bundle b = iin.getExtras();
+
+        username = iin.getStringExtra("user");
 
         loveButton = (ImageButton) findViewById(R.id.loveButton);
         feedButton = (ImageButton) findViewById(R.id.feedButton);
         brushButton = (ImageButton) findViewById(R.id.brushButton);
-
         remiButton = (ImageButton) findViewById(R.id.img_Remi);
         remiButton.setBackgroundResource(R.drawable.remi1);
         animation = (ImageView) findViewById(R.id.animation);
@@ -47,14 +51,13 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
             }
         });
 
-
         loveButton.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
                 //Intent intent = new Intent(MainActivity.this,LovePet.class).putExtra("accessoryOn", remisAccessory.IDACC);
-                Intent oldintent = new Intent();
-                if (oldintent.hasExtra("user")) {//coming from query
-                    String username = oldintent.getStringExtra("user");
+                //Intent oldintent = new Intent();
+                if (in.hasExtra("user")) {//coming from query
+                    //String username = oldintent.getStringExtra("user");
                     Intent intent = new Intent(MainActivity.this, LovePet.class);
                     intent.putExtra("user", username);
                     startActivity(intent);
@@ -66,9 +69,9 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
             @Override
             public void onClick(View view) {
 
-                Intent oldintent = new Intent();
-                if (oldintent.hasExtra("user")) {//coming from query
-                    String username = oldintent.getStringExtra("user");
+                //Intent oldintent = new Intent();
+                if (in.hasExtra("user")) {//coming from query
+                   // String username = oldintent.getStringExtra("user");
                     Intent intent = new Intent(MainActivity.this,Game1.class);
                     intent.putExtra("user", username);
                     startActivity(intent);
@@ -78,22 +81,31 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
         brushButton.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-                //Game 2 starts();
                 //Intent oldintent = new Intent();
-//                if (oldintent.hasExtra("user")) {//coming from query
-//                    String username = oldintent.getStringExtra("user");
-//                    Intent intent = new Intent(MainActivity.this,Game2.class);
-//                    intent.putExtra("user", username);
-//                    startActivity(intent);
-//                }
+                if (in.hasExtra("user")) {//coming from query
+                    //String username = oldintent.getStringExtra("user");
+                    Intent intent = new Intent(MainActivity.this,Game2.class);
+                    intent.putExtra("user", username);
+                    startActivity(intent);
+                }
 
             }
         });
 
-        if(b!=null)
-        {   String str =(String) b.get("accessoryOn");
-            int resID = getResources().getIdentifier(str , "drawable", getPackageName());
-            remisAccessory.drawMain(resID);
+//        if(b!=null)
+//        {   //String str =(String) b.get("accessoryOn");
+//            int resID = getResources().getIdentifier(str , "drawable", getPackageName());
+//            //remisAccessory.drawMain(resID);
+//        }
+
+        if (in.hasExtra("user")){
+            String username = in.getStringExtra("user");
+            //long usn = Long.valueOf(username).longValue();
+            if (db.getAccesory(username)!= null) {
+                String acc = db.getAccesory(username);
+                remisAccessory.setImage(Integer.parseInt(acc));
+            }
+
         }
 
     }

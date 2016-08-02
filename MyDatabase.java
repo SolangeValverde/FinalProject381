@@ -6,6 +6,7 @@ import android.database.Cursor;
 import android.database.SQLException;
 import android.database.sqlite.SQLiteDatabase;
 import android.database.sqlite.SQLiteException;
+import android.util.Log;
 
 
 public class MyDatabase {
@@ -32,7 +33,7 @@ public class MyDatabase {
         return id;
     }
 
-    public boolean updateScore(long rowId,String coins)
+    public boolean updateScore(String rowId,String coins)
     {
         ContentValues args = new ContentValues();
         args.put(Constants.USERNAME, rowId);
@@ -41,7 +42,7 @@ public class MyDatabase {
         return i > 0;
     }
 
-    public boolean updateAccesory(long rowId,String accesory)
+    public boolean updateAccesory(String rowId,String accesory)
     {
         ContentValues args = new ContentValues();
         args.put(Constants.USERNAME, rowId);
@@ -49,7 +50,23 @@ public class MyDatabase {
         int i =  db.update(Constants.TABLE_NAME, args, Constants.USERNAME + "=" + rowId, null);
         return i > 0;
     }
-    public boolean updateHighScore(long rowId,String hs1, String hs2)
+
+    public String getAccesory(String rowId)
+    {
+        SQLiteDatabase db = helper.getReadableDatabase();
+
+        //Cursor cursor = db.rawQuery("Select * FROM " + Constants.TABLE_NAME, null);
+        String query = "SELECT * FROM "+Constants.TABLE_NAME+" WHERE "+Constants.USERNAME+" = '" + rowId+ "' ";
+        Log.d("-", query);
+        Cursor c1 =db.rawQuery(query, null);
+
+        //String remiAccesory = cursor.getString(4);
+        String remiAccesory;
+        //if (c1.getCount() >4){
+            remiAccesory = c1.getString(c1.getColumnIndex(Constants.ACCESSORYID));
+            return remiAccesory;
+    }
+    public boolean updateHighScore(String rowId,String hs1, String hs2)
     {
         ContentValues args = new ContentValues();
         args.put(Constants.USERNAME, rowId);

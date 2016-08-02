@@ -11,7 +11,7 @@ public class MyHelper extends SQLiteOpenHelper {
 
 
     // Table create statement
-    private static final String CREATE_TABLE_IMAGE = "CREATE TABLE " + Constants.DATABASE_NAME
+    private static final String CREATE_USER_INFO_TABLE = "CREATE TABLE " + Constants.DATABASE_NAME
             + "("+ Constants.USERNAME + " TEXT," + Constants.HIGHSCORE + " TEXT," +
              Constants.HIGHSCORE2 + " TEXT,"+Constants.COINS + " TEXT,"+ Constants.ACCESSORYID + " TEXT);";
 
@@ -25,8 +25,8 @@ public class MyHelper extends SQLiteOpenHelper {
     @Override
     public void onCreate(SQLiteDatabase db) {
         try {
-            db.execSQL(CREATE_TABLE_IMAGE);
-            Toast.makeText(context, "onCreate() called", Toast.LENGTH_LONG).show();
+            db.execSQL(CREATE_USER_INFO_TABLE);
+            //Toast.makeText(context, "onCreate() called", Toast.LENGTH_LONG).show();
         } catch (SQLException e) {
             Toast.makeText(context, "exception onCreate() db", Toast.LENGTH_LONG).show();
         }

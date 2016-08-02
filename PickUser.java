@@ -108,8 +108,6 @@ public class PickUser extends AppCompatActivity {
                 Log.d("here", e.toString());
             }
 
-
-
             Intent intent2 = new Intent(this, MainActivity.class);
             intent2.putExtra("user", username);
             startActivity(intent2);

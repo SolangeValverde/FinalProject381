@@ -185,6 +185,7 @@ public class LovePet extends AppCompatActivity implements View.OnClickListener,V
             case DragEvent.ACTION_DROP:
                 ImageButton view = (ImageButton) event.getLocalState();
                 if (view.getId()==R.id.foodb1){
+                    frameAnimation.stop();
                     frameAnimation.start();
 
                     try{
@@ -194,8 +195,8 @@ public class LovePet extends AppCompatActivity implements View.OnClickListener,V
                         Intent oldintent = new Intent();
                         if (oldintent.hasExtra("user")) {//coming from query
                             String username = oldintent.getStringExtra("user");
-                            long un = Long.valueOf(username).longValue();
-                            db.updateScore(un, coins);
+                            //long un = Long.valueOf(username).longValue();
+                            db.updateScore(username, coins);
                         }
                         Toast.makeText(this, "Modified Successfully", Toast.LENGTH_SHORT).show();
                        // db.close();
@@ -228,9 +229,21 @@ public class LovePet extends AppCompatActivity implements View.OnClickListener,V
         }
     }
 
+    public void caseButtonsAction(Intent oldintent){
+        if (oldintent.hasExtra("user")) {//coming from query
+            String username = oldintent.getStringExtra("user");
+            //long un = Long.valueOf(username).longValue();
+            db.updateAccesory(username, remiAcc);
+        }
+        menuOff = true;
+        menuOnOff(menuOff);
+
+    }
 
     public void onClick(View v) {
+        Intent oldintent = new Intent();
         switch (v.getId()) {
+
             case R.id.backBtn:
                 //Do something
                 Intent intent = new Intent(this, MainActivity.class).putExtra("accessoryOn", remiAcc);
@@ -245,50 +258,42 @@ public class LovePet extends AppCompatActivity implements View.OnClickListener,V
             case R.id.menu_button2:
                 remisAccessory.setImage(R.drawable.remicollar3);
                 remiAcc = "remicollar3";
-                menuOff = true;
-                menuOnOff(menuOff);
+                caseButtonsAction(oldintent);
                 break;
             case R.id.menu_button3:
                 remisAccessory.setImage(R.drawable.remicollar4);
                 remiAcc = "remicollar4";
-                menuOff = true;
-                menuOnOff(menuOff);
+                caseButtonsAction(oldintent);
                 break;
             case R.id.menu_button4:
                 remisAccessory.setImage(R.drawable.remicollar2);
                 remiAcc = "remicollar2";
-                menuOff = true;
-                menuOnOff(menuOff);
+                caseButtonsAction(oldintent);
                 break;
             case R.id.menu_button5:
                 remisAccessory.setImage(R.drawable.remicollar1);
                 remiAcc = "remicollar1";
-                menuOff = true;
-                menuOnOff(menuOff);
+                caseButtonsAction(oldintent);
                 break;
             case R.id.menu_button6:
                 remisAccessory.setImage(R.drawable.remibandana4);
                 remiAcc = "remibandana4";
-                menuOff = true;
-                menuOnOff(menuOff);
+                caseButtonsAction(oldintent);;
                 break;
             case R.id.menu_button7:
                 remisAccessory.setImage(R.drawable.remibandana2);
                 remiAcc = "remibandana2";
-                menuOff = true;
-                menuOnOff(menuOff);
+                caseButtonsAction(oldintent);
                 break;
             case R.id.menu_button8:
                 remisAccessory.setImage(R.drawable.remibandana1);
                 remiAcc = "remibandana1";
-                menuOff = true;
-                menuOnOff(menuOff);
+                caseButtonsAction(oldintent);
                 break;
             case R.id.menu_button9:
                 remisAccessory.setImage(R.drawable.remibandana3);
                 remiAcc = "remibandana3";
-                menuOff = true;
-                menuOnOff(menuOff);
+                caseButtonsAction(oldintent);
                 break;
 
             default:
