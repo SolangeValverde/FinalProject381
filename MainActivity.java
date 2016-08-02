@@ -93,7 +93,8 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
                 //Intent oldintent = new Intent();
                 if (in.hasExtra("user")) {//coming from query
                     //String username = oldintent.getStringExtra("user");
-                    Intent intent = new Intent(MainActivity.this,Game2.class);
+                    //Intent intent = new Intent(MainActivity.this,Game2.class);
+                    Intent intent = new Intent(MainActivity.this,Tictaetoe.class);
                     intent.putExtra("user", username);
                     startActivity(intent);
                 }

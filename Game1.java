@@ -1,5 +1,6 @@
 package com.example.miroslav.finalproject;
 
+import android.animation.ObjectAnimator;
 import android.app.Activity;
 import android.content.Context;
 import android.content.pm.PackageManager;
@@ -14,6 +15,8 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewDebug;
 import android.view.ViewGroup;
+import android.view.animation.Animation;
+import android.view.animation.TranslateAnimation;
 import android.widget.ImageButton;
 import android.widget.ImageView;
 import android.widget.LinearLayout;
@@ -40,6 +43,7 @@ dogGame1 dog;
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_game1);
+        Context c = Game1.this;
         layout = (RelativeLayout) findViewById(R.id.linearLayout);
 
         gyroInfo = (TextView) findViewById(R.id.gyroInfo);
@@ -68,7 +72,11 @@ dogGame1 dog;
             for (int i = 0; i<objects.size(); i++){
                 objectGame1 ob = objects.get(i) ;
                 ob.draw(layout, IMGS[i] );
-                ob.update(IMGS[i]);
+                ob.update(IMGS[i], c);
+                Animation animation = new TranslateAnimation(ob.xPos, ob.xPos, ob.yPos, 9000);
+                animation.setDuration(3000);//set duration
+                animation.start();//start animation
+
                 // dog.collision(ob);
             }
             sel_gyroscope = new SensorEventListener() {
@@ -147,11 +155,14 @@ class objectGame1 {
         this.yVel = yVel;
     }
 
- public void update(ImageView picture){
+ public void update(ImageView picture, Context c){
      yPos = yPos+yVel;
      picture.setY(yPos);
- }
 
+ }
+public void destroy(){
+    //to do -> Destroy object
+}
     public void draw(RelativeLayout l, ImageView picture) {
         picture.setImageResource(R.drawable.object1);
         picture.setX(xPos);
