@@ -10,6 +10,7 @@ import android.hardware.SensorEvent;
 import android.hardware.SensorEventListener;
 import android.hardware.SensorManager;
 import android.os.Handler;
+import android.os.Vibrator;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
 import android.util.Log;
@@ -48,6 +49,12 @@ public class BopIt extends AppCompatActivity {
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_bop_it);
+
+        myDBclass = new MyDatabase(this);
+
+        dbHelper = new MyHelper(this);
+        myDB = dbHelper.getWritableDatabase();
+
         startGame = (Button) findViewById(R.id.startGame);
         dogBopit = (ImageButton) findViewById(R.id.dogBopit);
         command = (TextView) findViewById(R.id.Command);
@@ -83,15 +90,14 @@ public class BopIt extends AppCompatActivity {
                         currentAction = "coverIt";
                         checkIfCorrectAction(coverIt, currentAction);
                     }
-
                 }
-
                 @Override
                 public void onAccuracyChanged(Sensor sensor, int accuracy) {
                 }
             };
         }
         mSensorManager.registerListener(sel_gyroscope, mSensorManager.getDefaultSensor(Sensor.TYPE_GYROSCOPE), 9999);
+        mSensorManager.registerListener(sel_light, mSensorManager.getDefaultSensor(Sensor.TYPE_LIGHT), 9999);
 
         dogBopit.setOnClickListener(new View.OnClickListener() {
 
@@ -135,7 +141,7 @@ public class BopIt extends AppCompatActivity {
 
     public void checkIfCorrectAction(boolean fromAction, String str){
 
-        if ( gameOn ||currentAskedAction == str || fromAction){
+        if ( gameOn && currentAskedAction == str && fromAction){
             // gimme coins or something
             score = score + 20;
             //points.append(Integer.toString(score));
@@ -143,8 +149,10 @@ public class BopIt extends AppCompatActivity {
             commandRandomAdder();
         }
         else{
-
-            endGame(true);
+            boolean errorMade = true;
+            Vibrator v = (Vibrator) getBaseContext().getSystemService(Context.VIBRATOR_SERVICE);
+            v.vibrate(1000);
+            endGame(errorMade);
         }
 
     }
@@ -155,27 +163,43 @@ public class BopIt extends AppCompatActivity {
             score = 0;
             gameOn = true;
             commandRandomAdder();
+            command.setBackgroundColor(Color.rgb(188,247,198));
         }
     }
 
-     void endGame(boolean endGame) {
+     void endGame(boolean errorMade) {
         /* Start the game, start generating random notes and watching the keys to match to the playList */
-        if (gameOn==true && endGame== true ) {
+        if (gameOn==true && errorMade== true ) {
+            Log.d("ERROR MADE???\n", "why you no turn red?!!?!??!");
             gameOn = false;
             command.setBackgroundColor(Color.rgb(235, 117,117));
             command.setText("Game Over :(");
 
             String finalScore = points.getText().toString();
+            String[] separated = finalScore.split(" ");
+            //separated[0]; // this will contain "Fruit"
+            String finalCoins =separated[1];
+
+
             Intent iin= getIntent();
             Bundle b = iin.getExtras();
             if(b!=null) {
                 String username = (String) b.get("user");
-                if (dbHelper.getHighScoreG1(username)!= "" ||dbHelper.getHighScoreG1(username)!= null) {
-                    String currentHS = dbHelper.getAccesory(username);
-                    if (Integer.parseInt(finalScore) > Integer.parseInt(currentHS)) {
-                        dbHelper.updateCoins(username, finalScore, currentHS);
+
+                if (dbHelper.getHighScoreG1(username)!= "" || dbHelper.getHighScoreG1(username)!= null) {
+                    String currentHS = dbHelper.getHighScoreG1(username);
+                    if (Integer.parseInt(finalCoins) > Integer.parseInt(currentHS)) {
+                        dbHelper.updateHighScoreG1(username, finalCoins, currentHS);
                     }
+
+
+                    String coins = dbHelper.getCoins(username);
+                    int newCoinAmt = Integer.parseInt(coins) + Integer.parseInt(finalCoins);
+                    Log.d("iiafyalfbsal\n", Integer.toString(newCoinAmt));
+
+                    dbHelper.updateCoins(username,Integer.toString(newCoinAmt), coins);
                 }
+
 
             }
 

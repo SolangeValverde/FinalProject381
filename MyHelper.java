@@ -155,7 +155,7 @@ public class MyHelper extends SQLiteOpenHelper {
 
         String highscore1 = "0";
         int colAcc = c1.getColumnIndex(Constants.HIGHSCORE);
-        Log.d("\n sol \n", Integer.toString(colAcc));
+        Log.d("\n sol highscore 1 \n", Integer.toString(colAcc));
         if (c1!= null) {
             if (c1.moveToFirst() && colAcc ==1) {
                 highscore1 = c1.getString(colAcc);
