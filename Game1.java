@@ -11,16 +11,19 @@ import android.hardware.SensorManager;
 import android.os.Vibrator;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewDebug;
 import android.view.ViewGroup;
 import android.view.animation.Animation;
 import android.view.animation.TranslateAnimation;
+import android.widget.Button;
 import android.widget.ImageButton;
 import android.widget.ImageView;
 import android.widget.LinearLayout;
 import android.widget.RelativeLayout;
+import android.widget.TableLayout;
 import android.widget.TextView;
 import android.widget.Toast;
 
@@ -44,7 +47,7 @@ dogGame1 dog;
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_game1);
         Context c = Game1.this;
-        layout = (RelativeLayout) findViewById(R.id.linearLayout);
+        layout = (RelativeLayout) findViewById(R.id.relLayout);
 
         gyroInfo = (TextView) findViewById(R.id.gyroInfo);
 
@@ -59,23 +62,20 @@ dogGame1 dog;
         dog = new dogGame1(200,800,0);
         for (int j = 0; j<10; j++) {
             IMGS[j] = new ImageView(this);
-            objects.add(new objectGame1(r.nextInt(800),r.nextInt(20),-50));
+            objects.add(new objectGame1(r.nextInt(800),r.nextInt(200),3));
 
         }
 
         mSensorManager = (SensorManager) getSystemService(Context.SENSOR_SERVICE);
         PackageManager pm = getPackageManager();
-        if (!pm.hasSystemFeature(PackageManager.FEATURE_SENSOR_PROXIMITY)) { //if the device does not have a microphone
+        if (!pm.hasSystemFeature(PackageManager.FEATURE_SENSOR_PROXIMITY)) {
             Toast.makeText(this, "no Gyroscope Sensor available", Toast.LENGTH_SHORT).show();
         } else {
-            dog.draw(layout, doge);
+            //dog.draw(layout, doge);
             for (int i = 0; i<objects.size(); i++){
                 objectGame1 ob = objects.get(i) ;
-                ob.draw(layout, IMGS[i] );
-                ob.update(IMGS[i], c);
-                Animation animation = new TranslateAnimation(ob.xPos, ob.xPos, ob.yPos, 9000);
-                animation.setDuration(3000);//set duration
-                animation.start();//start animation
+               // ob.draw(layout, IMGS[i] );
+                //ob.update(IMGS[i]);
 
                 // dog.collision(ob);
             }
@@ -89,6 +89,25 @@ dogGame1 dog;
                                 @Override
                                 public void run() {
                                     dog.update(xGyro, doge);
+                                    for (int i = 0; i<objects.size(); i++){
+                                        objectGame1 ob = objects.get(i) ;
+                                        ob.update(IMGS[i]);
+                                        if(ob.yPos>dog.yPos + 24){
+                                            objects.remove(objects.get(i));
+                                            ob.update(IMGS[i]);
+
+                                            //Log.d("SOL \n", "(obs) "+objects.size());
+
+                                        }
+
+                                        if (dog.collision(dog, ob)){
+                                            objects.remove(i);
+                                            Log.d("SOOOOOL \n", "i  "+ i);
+                                            Log.d("SOOOOOL \n", "arraylist  "+objects.size());
+                                        }
+                                        // dog.collision(ob);
+                                    }
+
                                 }
                             });
                 }
@@ -98,6 +117,11 @@ dogGame1 dog;
             };
         }
         mSensorManager.registerListener(sel_gyroscope, mSensorManager.getDefaultSensor(Sensor.TYPE_GYROSCOPE), 9999);
+    }
+
+    void updateGame(){
+
+
     }
 }
 
@@ -126,14 +150,21 @@ dogGame1 dog;
          }
 
      }
+     //*layout.addView(picture);
 
-     /*layout.addView(picture);
-     boolean collision(objectGame1 other) {
-         return ((Math.abs(xPos - other.xPos()) < (int) ((other.owidth()/ 2))) &&
-                 (Math.abs(yPos - other.yPos()) < (int) ((other.oheight()/ 2))));
+     boolean collision(dogGame1 doge, objectGame1 other) {
+//         return ((Math.abs(doge.getX() - other.xPos) < (int) ((other.owidth/ 2))) &&
+//                 (Math.abs(doge.getY() - other.yPos) < (int) ((other.oheight/ 2))));
+         return ((Math.abs(doge.xPos - other.xPos) < (int) ((other.owidth/ 2))) &&
+                 (Math.abs(doge.yPos - other.yPos) < (int) ((other.oheight/ 2))));
      }
-     */
-     public void draw(RelativeLayout l, ImageView doge) {
+
+    boolean collisionButton(Button other) {;
+        return ((Math.abs(xPos - other.getX()) < (int) ((other.getWidth()/ 2))) &&
+                (Math.abs(yPos - other.getY()) < (int) ((other.getHeight()/ 2))));
+    }
+
+     public void draw(LinearLayout l, ImageView doge) {
          doge.setImageResource(R.drawable.object2);
          doge.setX(xPos);
          doge.setY(yPos);
@@ -155,15 +186,21 @@ class objectGame1 {
         this.yVel = yVel;
     }
 
- public void update(ImageView picture, Context c){
+ public void update(ImageView picture){
      yPos = yPos+yVel;
      picture.setY(yPos);
+     owidth = picture.getWidth();
+     oheight = picture.getHeight();
+
+     //Log.d("Sol\n", "HEREEEEE    " + yPos+ "   " + yVel);
+
 
  }
-public void destroy(){
-    //to do -> Destroy object
+public void destroy(objectGame1 ob){
+    //to do:
+    ob = null;
 }
-    public void draw(RelativeLayout l, ImageView picture) {
+    public void draw(TableLayout l, ImageView picture) {
         picture.setImageResource(R.drawable.object1);
         picture.setX(xPos);
         picture.setY(yPos);

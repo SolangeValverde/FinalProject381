@@ -5,10 +5,7 @@ import android.database.sqlite.SQLiteDatabase;
 import android.support.v7.app.AppCompatActivity;
 import android.app.Activity;
 import android.content.pm.ActivityInfo;
-import android.content.res.Configuration;
 import android.os.Bundle;
-import android.view.Menu;
-import android.view.MenuInflater;
 import android.view.MenuItem;
 import android.view.View;
 import android.view.View.OnClickListener;
@@ -38,7 +35,6 @@ public class Tictaetoe extends AppCompatActivity {
     private int mPlayerTwoCounter = 0;
 
     // Bools needed to see if player one goes first
-    // if the gameType is to be single or local multiplayer
     // if it is player one's turn
     // and if the game is over
     private boolean mPlayerOneFirst = true;
@@ -52,10 +48,8 @@ public class Tictaetoe extends AppCompatActivity {
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_tictaetoe);
-       // requestWindowFeature(Window.FEATURE_NO_TITLE);
         setRequestedOrientation(ActivityInfo.SCREEN_ORIENTATION_PORTRAIT);
 
-        //boolean mGameType = getIntent().getExtras().getBoolean("gameType");
 
         myDBclass = new MyDatabase(this);
 
@@ -161,22 +155,6 @@ public class Tictaetoe extends AppCompatActivity {
                 mPlayerOneFirst = true;
             }
         }
-        else
-        {
-            mPlayerOneText.setText("Player One:");
-            mPlayerTwoText.setText("Player Two:");
-
-            if (mPlayerOneFirst)
-            {
-                mInfoTextView.setText(R.string.turn_player_one);
-                mPlayerOneFirst = false;
-            }
-            else
-            {
-                mInfoTextView.setText(R.string.turn_player_two);
-                mPlayerOneFirst = true;
-            }
-        }
 
         mGameOver = false;
     }
@@ -256,37 +234,7 @@ public class Tictaetoe extends AppCompatActivity {
                             mGameOver = true;
                         }
                     }
-                    else
-                    {
-                        if (mIsPlayerOneTurn)
-                            setMove(mGame.PLAYER_ONE, location);
-                        else
-                            setMove(mGame.PLAYER_TWO, location);
 
-                        int winner = mGame.checkForWinner();
-
-                        if (winner == 0)
-                        {
-                            if (mIsPlayerOneTurn)
-                            {
-                                mInfoTextView.setText(R.string.turn_player_two);
-                                mIsPlayerOneTurn = false;
-                            }
-                            else
-                            {
-                                mInfoTextView.setText(R.string.turn_player_one);
-                                mIsPlayerOneTurn = true;
-                            }
-                        }
-                        else if (winner == 1)
-                        {
-                            mInfoTextView.setText(R.string.result_tie);
-                            mTieCounter++;
-                            mTieCount.setText(Integer.toString(mTieCounter));
-                            mGameOver = true;
-                        }
-
-                    }
                 }
             }
         }
