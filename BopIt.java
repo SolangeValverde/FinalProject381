@@ -25,15 +25,17 @@ import java.util.Iterator;
 import java.util.List;
 import java.util.Observable;
 
-public class BopIt extends AppCompatActivity {
+public class BopIt extends AppCompatActivity implements View.OnClickListener {
     private final java.util.Random rand = new java.util.Random();
     public SensorManager mSensorManager;
-    public SensorEventListener sel_gyroscope, sel_light;
+    public SensorEventListener sel_gyroscope, sel_light, sel_accelerometer;
     public float xGyro = 0;
+    public float yGyro = 0;
+    public float zGyro = 0;
     public int score = 0;
-    public float xGyroOld;
+    public float xGyroOld, yGyroOld, zGyroOld;
     private boolean gameOn = false;
-    public ImageButton dogBopit;
+    public ImageButton dogBopit, backBtn;
     public Button startGame;
     public boolean twistIt = false;
     public boolean coverIt = false;
@@ -58,19 +60,25 @@ public class BopIt extends AppCompatActivity {
         startGame = (Button) findViewById(R.id.startGame);
         dogBopit = (ImageButton) findViewById(R.id.dogBopit);
         command = (TextView) findViewById(R.id.Command);
+        backBtn = (ImageButton) findViewById(R.id.backBtn);
         points = (TextView) findViewById(R.id.points);
         mSensorManager = (SensorManager) getSystemService(Context.SENSOR_SERVICE);
         PackageManager pm = getPackageManager();
-        if (!pm.hasSystemFeature(PackageManager.FEATURE_SENSOR_PROXIMITY)) {
-            Toast.makeText(this, "no Gyroscope Sensor available", Toast.LENGTH_SHORT).show();
+        if (!pm.hasSystemFeature(PackageManager.FEATURE_SENSOR_GYROSCOPE) && !pm.hasSystemFeature(PackageManager.FEATURE_SENSOR_LIGHT)) {
+            Toast.makeText(this, "no Gyroscope Sensor and/or Light Sensor available", Toast.LENGTH_SHORT).show();
         } else {
 
             sel_gyroscope = new SensorEventListener() {
                 @Override
                 public void onSensorChanged(SensorEvent event) {
                     xGyroOld = xGyro;
+                    yGyroOld = yGyro;
+                    zGyroOld = zGyro;
                     xGyro = event.values[1];
-                    if (Math.abs(xGyro - xGyroOld) > 0.5) {
+                    yGyro = event.values[0];
+                    zGyro = event.values[2];
+                    Log.d("X GYROSCOPE\n", String.valueOf(xGyro));
+                    if (Math.abs(xGyro - xGyroOld) > 1 || Math.abs(yGyro - yGyroOld) > 1 || Math.abs(zGyro - zGyroOld) > 1) {
                         twistIt = true;
                         currentAction = "twistIt";
                         checkIfCorrectAction(twistIt, currentAction);
@@ -85,7 +93,9 @@ public class BopIt extends AppCompatActivity {
             sel_light = new SensorEventListener() {
                 @Override
                 public void onSensorChanged(SensorEvent event) {
-                    if (event.values[0] < 10) {
+                    Log.d(" light\n", String.valueOf(event.values[0]));
+                    if (event.values[0] < 12) {
+                        Log.d("X light\n", String.valueOf(event.values[0]));
                         coverIt = true;
                         currentAction = "coverIt";
                         checkIfCorrectAction(coverIt, currentAction);
@@ -96,6 +106,8 @@ public class BopIt extends AppCompatActivity {
                 }
             };
         }
+
+
         mSensorManager.registerListener(sel_gyroscope, mSensorManager.getDefaultSensor(Sensor.TYPE_GYROSCOPE), 9999);
         mSensorManager.registerListener(sel_light, mSensorManager.getDefaultSensor(Sensor.TYPE_LIGHT), 9999);
 
@@ -118,6 +130,19 @@ public class BopIt extends AppCompatActivity {
 
             }
         });
+
+
+        backBtn.setOnClickListener(this);
+    }
+
+    public void onClick(View v) {
+        Intent iin = getIntent();
+        Bundle bu = iin.getExtras();
+        if (bu != null) {
+            String username = (String) bu.get("user");
+            Intent intent = new Intent(this, MainActivity.class).putExtra("user", username);
+            startActivity(intent);
+        }
     }
 
 
@@ -127,15 +152,20 @@ public class BopIt extends AppCompatActivity {
         if (deviceButtonIndex == 1){
             command.setText("COVER IT!!");
             currentAskedAction = "coverIt";
+            dogBopit.setBackgroundDrawable(getResources().getDrawable(R.drawable.coveritdog));
 
         }
         else if(deviceButtonIndex==2){
             command.setText("SHAKE IT!!");
             currentAskedAction = "twistIt";
+            dogBopit.setBackgroundDrawable(getResources().getDrawable(R.drawable.shakeitdog));
+
         }
         else {
             command.setText("BOP IT!!");
             currentAskedAction = "bopIt";
+            dogBopit.setBackgroundDrawable(getResources().getDrawable(R.drawable.bopitdog));
+
         }
     }
 
@@ -143,15 +173,16 @@ public class BopIt extends AppCompatActivity {
 
         if ( gameOn && currentAskedAction == str && fromAction){
             // gimme coins or something
-            score = score + 20;
+            score = score + 40;
             //points.append(Integer.toString(score));
             points.setText("Points: "+Integer.toString(score));
             commandRandomAdder();
-        }
-        else{
+        } else if (gameOn && currentAskedAction != str) {
             boolean errorMade = true;
-            Vibrator v = (Vibrator) getBaseContext().getSystemService(Context.VIBRATOR_SERVICE);
-            v.vibrate(1000);
+            if (gameOn) {
+                Vibrator v = (Vibrator) getBaseContext().getSystemService(Context.VIBRATOR_SERVICE);
+                v.vibrate(1000);
+            }
             endGame(errorMade);
         }
 
@@ -170,7 +201,6 @@ public class BopIt extends AppCompatActivity {
      void endGame(boolean errorMade) {
         /* Start the game, start generating random notes and watching the keys to match to the playList */
         if (gameOn==true && errorMade== true ) {
-            Log.d("ERROR MADE???\n", "why you no turn red?!!?!??!");
             gameOn = false;
             command.setBackgroundColor(Color.rgb(235, 117,117));
             command.setText("Game Over :(");
@@ -203,8 +233,6 @@ public class BopIt extends AppCompatActivity {
 
             }
 
-            // set score as final score;
-            // if final score highest score, set high score
         }
     }
 

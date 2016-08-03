@@ -21,9 +21,10 @@ public class Remi {
 
 
     boolean collisionBrush(ImageView other) {
-        return ((Math.abs(xPos - other.getX()) < (int) ((other.getWidth()/ 2))) &&
-                (Math.abs(yPos - other.getY()) < (int) ((other.getHeight()/ 2))));
+        return ((Math.abs(xPos - other.getX()) < (int) ((other.getWidth() / 2))) &&
+                (Math.abs(yPos - other.getY()) < (int) ((other.getHeight() / 2))));
     }
+
     public void draw() {
         remi_button.setX(xPos);
         remi_button.setY(yPos);

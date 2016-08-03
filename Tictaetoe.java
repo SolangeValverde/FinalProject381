@@ -11,15 +11,17 @@ import android.view.View;
 import android.view.View.OnClickListener;
 import android.view.Window;
 import android.widget.Button;
+import android.widget.ImageButton;
 import android.widget.TextView;
 
-public class Tictaetoe extends AppCompatActivity {
+public class Tictaetoe extends AppCompatActivity implements View.OnClickListener {
     // Represents the internal state of the game
     private TicTacToeGame mGame;
 
     // Buttons making up the board
     private Button mBoardButtons[];
     private Button mNewGame;
+    ImageButton backButton;
 
     // Various text displayed
     private TextView mInfoTextView;
@@ -57,6 +59,7 @@ public class Tictaetoe extends AppCompatActivity {
         myDB = dbHelper.getWritableDatabase();
 
         // Initialize the buttons
+        backButton = (ImageButton) findViewById(R.id.backBtn);
         mBoardButtons = new Button[mGame.getBOARD_SIZE()];
         mBoardButtons[0] = (Button) findViewById(R.id.one);
         mBoardButtons[1] = (Button) findViewById(R.id.two);
@@ -88,6 +91,17 @@ public class Tictaetoe extends AppCompatActivity {
         // start a new game
         startNewGame(true);
 
+        backButton.setOnClickListener(this);
+    }
+
+    public void onClick(View v) {
+        Intent iin = getIntent();
+        Bundle bu = iin.getExtras();
+        if (bu != null) {
+            String username = (String) bu.get("user");
+            Intent intent = new Intent(this, MainActivity.class).putExtra("user", username);
+            startActivity(intent);
+        }
     }
 
 

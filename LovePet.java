@@ -27,6 +27,7 @@ public class LovePet extends AppCompatActivity implements View.OnClickListener,V
     MediaPlayer mp;
     ImageButton remiButton, foodMenu, foodb1, backButton, menub1, menub2, menub3, menub4, menub5, menub6, menub7, menub8, menub9;
     ImageView animation;
+    ImageButton foodb2, foodb3, foodb4, foodb5;
     Button money;
     Accessory remisAccessory;
     FrameLayout menuFrame;
@@ -61,8 +62,6 @@ public class LovePet extends AppCompatActivity implements View.OnClickListener,V
 
 
 
-
-
             menuButton.setOnClickListener(new View.OnClickListener() {
             public void onClick(View v) {
                 if (menuOff) {
@@ -78,16 +77,20 @@ public class LovePet extends AppCompatActivity implements View.OnClickListener,V
         foodButton.setOnClickListener(new View.OnClickListener() {
             public void onClick(View v) {
                 if (menuFoodOff) {
-                    menuFoodOff = false;
+                    // menuFoodOff = false;
                     menuFoodOnOff(menuFoodOff);
                 } else {
-                    menuOff = true;
+                    //menuOff = true;
                     menuFoodOnOff(menuFoodOff);
                 }
             }
         });
         foodMenuLayout = (LinearLayout) findViewById(R.id.foodMenu);
         foodb1 = (ImageButton) findViewById(R.id.foodb1);
+        foodb2 = (ImageButton) findViewById(R.id.foodb2);
+        foodb3 = (ImageButton) findViewById(R.id.foodb3);
+        foodb4 = (ImageButton) findViewById(R.id.foodb4);
+        foodb5 = (ImageButton) findViewById(R.id.foodb5);
         menuFrame = (FrameLayout) findViewById(R.id.frameLayout2);
         menub1 = (ImageButton) findViewById(R.id.menu_button1);
         menub2 = (ImageButton) findViewById(R.id.menu_button2);
@@ -126,16 +129,14 @@ public class LovePet extends AppCompatActivity implements View.OnClickListener,V
 
 
         foodb1.setOnTouchListener(this);
+        foodb2.setOnTouchListener(this);
+        foodb3.setOnTouchListener(this);
+        foodb4.setOnTouchListener(this);
+        foodb5.setOnTouchListener(this);
         remiButton.setOnDragListener(this);
 
-//        Intent iin= getIntent();
-//        Bundle b = iin.getExtras();
         Intent iin= getIntent();
         Bundle b = iin.getExtras();
-//        if(b!=null) {
-//            String username = (String) b.get("user");
-//
-//        }
         if (b!=null){
             String username = (String) b.get("user");
             if (dbHelper.getAccesory(username)!= "" ||dbHelper.getAccesory(username)!= null) {
@@ -179,13 +180,23 @@ public class LovePet extends AppCompatActivity implements View.OnClickListener,V
         }
     }
 
-    public void menuFoodOnOff(final boolean boolMenuOff) {
+    public void menuFoodOnOff(boolean boolMenuOff) {
         if (boolMenuOff) {
             foodMenuLayout.setVisibility(View.GONE);
             foodb1.setVisibility(View.GONE);
+            foodb2.setVisibility(View.GONE);
+            foodb3.setVisibility(View.GONE);
+            foodb4.setVisibility(View.GONE);
+            foodb5.setVisibility(View.GONE);
+            menuFoodOff = false;
         } else {
             foodMenuLayout.setVisibility(View.VISIBLE);
             foodb1.setVisibility(View.VISIBLE);
+            foodb2.setVisibility(View.VISIBLE);
+            foodb3.setVisibility(View.VISIBLE);
+            foodb4.setVisibility(View.VISIBLE);
+            foodb5.setVisibility(View.VISIBLE);
+            menuFoodOff = true;
         }
     }
 
@@ -201,11 +212,11 @@ public class LovePet extends AppCompatActivity implements View.OnClickListener,V
                 break;
             case DragEvent.ACTION_DROP:
                 ImageButton view = (ImageButton) event.getLocalState();
-                if (view.getId()==R.id.foodb1){
+                if (view.getId() == R.id.foodb1 || view.getId() == R.id.foodb5 || view.getId() == R.id.foodb3) {
 
                     try{
                         String coins = money.getText().toString();
-                        int newCoinAmt = Integer.parseInt(coins) - 10;
+                        int newCoinAmt = Integer.parseInt(coins) - 20;
                         Intent iin= getIntent();
                         Bundle b = iin.getExtras();
                         if(b!= null){
@@ -213,10 +224,25 @@ public class LovePet extends AppCompatActivity implements View.OnClickListener,V
                             dbHelper.updateCoins(username,Integer.toString(newCoinAmt), coins);
                             money.setText(Integer.toString(newCoinAmt));
                         }
-                        //Toast.makeText(this, "Modified Successfully", Toast.LENGTH_SHORT).show();
-
-                        //finish();
                     }catch (Exception e) {
+                        Toast.makeText(this, "error", Toast.LENGTH_SHORT).show();
+                        e.printStackTrace();
+                    }
+                }
+                if (view.getId() == R.id.foodb2 || view.getId() == R.id.foodb4) {
+
+                    try {
+                        String coins = money.getText().toString();
+                        int newCoinAmt = Integer.parseInt(coins) - 30;
+                        Intent iin = getIntent();
+                        Bundle b = iin.getExtras();
+                        if (b != null) {
+                            String username = (String) b.get("user");
+                            ;
+                            dbHelper.updateCoins(username, Integer.toString(newCoinAmt), coins);
+                            money.setText(Integer.toString(newCoinAmt));
+                        }
+                    } catch (Exception e) {
                         Toast.makeText(this, "error", Toast.LENGTH_SHORT).show();
                         e.printStackTrace();
                     }
@@ -324,122 +350,4 @@ public class LovePet extends AppCompatActivity implements View.OnClickListener,V
 }
 
 
-////////////////////////////////////////////////////////////////////////////////////
-/*
-
-package com.example.miroslav.draganddrop;
-
-import android.content.ClipData;
-import android.graphics.Color;
-import android.support.v4.view.MotionEventCompat;
-import android.support.v7.app.AppCompatActivity;
-import android.os.Bundle;
-import android.view.DragEvent;
-import android.view.MotionEvent;
-import android.view.View;caseButtonsAction(iin);
-import android.widget.SeekBar;
-import android.widget.TextView;
-
-public class MainActivity extends AppCompatActivity implements View.OnTouchListener, SeekBar.OnSeekBarChangeListener, View.OnDragListener {
-    int valR, valB, valG, newR, newG, newB;
-    TextView textViewR, textViewB, textViewG, textViewFinal;
-    SeekBar seekBarR, seekBarB, seekBarG;
-
-    @Override
-    protected void onCreate(Bundle savedInstanceState) {
-        super.onCreate(savedInstanceState);
-        setContentView(R.layout.activity_main);
-        seekBarR = (SeekBar) findViewById(R.id.redBar);
-        seekBarG = (SeekBar) findViewById(R.id.greenBar);
-        seekBarB = (SeekBar) findViewById(R.id.blueBar);
-        seekBarR.setOnSeekBarChangeListener(this);
-        seekBarG.setOnSeekBarChangeListener(this);
-        seekBarB.setOnSeekBarChangeListener(this);
-        textViewR = (TextView) findViewById(R.id.textViewRed);
-        textViewG = (TextView) findViewById(R.id.textViewGreen);
-        textViewB = (TextView) findViewById(R.id.textViewBlue);
-        textViewFinal = (TextView) findViewById(R.id.textViewResult);
-
-        textViewR.setOnTouchListener(this);
-        textViewG.setOnTouchListener(this);
-        textViewB.setOnTouchListener(this);
-
-        textViewFinal.setOnDragListener(this);
-
-        newR = 0;
-        newG = 0;
-        newB = 0;
-
-    }
-
-    @Override
-    public void onProgressChanged(SeekBar seekbar, int progress, boolean fromUser) {
-        if (seekbar.getId() == R.id.redBar) {
-            valR = seekbar.getProgress();
-            textViewR.setBackgroundColor(Color.rgb(valR, 0, 0));
-            textViewR.setText("R = " + valR);
-        }
-        if (seekbar.getId() == R.id.greenBar) {
-            valG = seekbar.getProgress();
-            textViewG.setBackgroundColor(Color.rgb(0, valG, 0));
-            textViewG.setText("G = " + valG);
-        }
-        if (seekbar.getId() == R.id.blueBar) {
-            valB = seekbar.getProgress();
-            textViewB.setBackgroundColor(Color.rgb(0, 0, valB));
-            textViewB.setText("B = " + valB);
-        }
-    }
-
-
-    @Override
-    public void onStartTrackingTouch(SeekBar seekBar) {
-    }
-
-    @Override
-    public void onStopTrackingTouch(SeekBar seekBar) {
-    }
-
-@Override
-public boolean onDrag(View v, DragEvent event){
-    switch(event.getAction()){
-        case DragEvent.ACTION_DRAG_STARTED:
-            break;
-        case DragEvent.ACTION_DRAG_ENTERED:
-            break;
-        case DragEvent.ACTION_DRAG_EXITED:
-            break;
-        case DragEvent.ACTION_DROP:
-            TextView view = (TextView) event.getLocalState();
-            if (view.getId()==R.id.textViewRed){
-                newR=valR;
-            }
-            if (view.getId()==R.id.textViewGreen){
-                newG=valG;
-            }
-            if (view.getId()==R.id.textViewBlue){
-                newB=valB;
-            }
-            TextView container = (TextView) v;
-            container.setBackgroundColor(Color.rgb(newR, newG, newB));
-            break;
-        case DragEvent.ACTION_DRAG_ENDED:
-            break;
-    }
-    return true;
-}
-    @Override
-    public boolean onTouch(View view, MotionEvent motionEvent) {
-        if (motionEvent.getAction() == motionEvent.ACTION_DOWN) {
-            ClipData data = ClipData.newPlainText("", "");
-            View.DragShadowBuilder shadowBuilder = new View.DragShadowBuilder(view);
-            view.startDrag(data, shadowBuilder, view, 0);
-            return true;
-        } else {
-            return false;
-        }
-    }
-}
-
- */
 ///////////////////////////////////////////////////////////////////////////////
