@@ -27,8 +27,12 @@ public class CreateUser extends AppCompatActivity {
         SharedPreferences sharedPreferences = getSharedPreferences("MyData", Context.MODE_PRIVATE);
         String username = sharedPreferences.getString("username", DEFAULT);
         String password = sharedPreferences.getString("password", DEFAULT);
-
-        if (!username.equals(DEFAULT) && !password.equals(DEFAULT)){
+        Bundle b = iin.getExtras();
+        String newuser = null;
+        if (b != null) {
+            newuser = (String) b.get("NewUser");
+        }
+        if (!username.equals(DEFAULT) && !password.equals(DEFAULT) && newuser == null) {
             Toast.makeText(this, "user data exists, loading login page...", Toast.LENGTH_LONG).show();
             Intent intent = new Intent(this, PickUser.class);
             startActivity(intent);

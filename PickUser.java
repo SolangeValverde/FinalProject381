@@ -79,7 +79,7 @@ public class PickUser extends AppCompatActivity {
 
     public void CreateUser(View view){
         Toast.makeText(this, "Create User", Toast.LENGTH_LONG).show();
-        Intent intent= new Intent(this, CreateUser.class);
+        Intent intent = new Intent(this, CreateUser.class).putExtra("newuser", "newuser");
         startActivity(intent);
     }
 
